@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Mercados Verticais | D.PEDRO SOLUÇÕES – Tecnologia, Segurança & Energia</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Soluções personalizadas para condomínios, indústria, comércio, infraestruturas críticas e energia. D.PEDRO SOLUÇÕES atende mercados verticais com alta tecnologia em Angola.">
+    <meta name="keywords" content="Mercados verticais, segurança condomínios, indústria Angola, CFTV empresas, energia solar comercial">
+    <meta name="author" content="D.PEDRO SOLUÇÕES">
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://i.ibb.co/fVJjMXtL/logo1.png" type="image/x-icon">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/hFnw5Br7/logo.jpg">
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #2563eb15, transparent 30%),
+                        radial-gradient(circle at bottom right, #fbbf2415, transparent 30%),
+                        #0f172a;
+            color: #e2e8f0;
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(37,99,235,0.3);
+            border-top-color: #fbbf24;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Cursor glow desktop */
+        @media (min-width: 769px) {
+            .cursor-glow {
+                position: fixed;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: #2563eb;
+                pointer-events: none;
+                filter: blur(15px);
+                z-index: 9999;
+                transition: transform 0.1s ease;
+            }
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(251,191,36,0.3);
+        }
+        .top-bar .contact-info { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+        .top-bar .contact-info i { color: #fbbf24; }
+        .social-links a { color: #cbd5e1; margin-left: 1rem; transition: 0.2s; }
+        .social-links a:hover { color: #fbbf24; transform: translateY(-2px); }
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; text-align: center; gap: 0.5rem; }
+            .top-bar .contact-info { justify-content: center; }
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { display: flex; align-items: center; gap: 0.75rem; }
+        .logo img { height: 55px; transition: 0.3s; }
+        .logo-text { font-weight: 700; font-size: 1.2rem; color: white; line-height: 1.2; }
+        .logo-text small { display: block; font-size: 0.55rem; color: #94a3b8; }
+        .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+        .nav-links a, .nav-links button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-weight: 500;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .nav-links a:hover, .nav-links a.active { background: rgba(37,99,235,0.3); color: #fbbf24; }
+        .btn-app { background: linear-gradient(135deg, #22c55e, #16a34a) !important; color: white !important; }
+        .menu-toggle { display: none; cursor: pointer; font-size: 1.5rem; background: none; border: none; color: white; }
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(15,23,42,0.98);
+                backdrop-filter: blur(15px);
+                padding: 1.5rem;
+                gap: 0.8rem;
+                z-index: 99;
+                border-bottom: 1px solid rgba(251,191,36,0.3);
+            }
+            .nav-links.active { display: flex; }
+            .menu-toggle { display: block; }
+        }
+
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 5%; }
+
+        /* Page Header */
+        .page-header { text-align: center; margin: 2rem 0 1rem; }
+        .page-header h1 { font-size: 2.8rem; background: linear-gradient(135deg, #ffffff, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .page-header p { color: #94a3b8; max-width: 700px; margin: 0.5rem auto; }
+
+        /* Intro Section */
+        .intro-text {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            border: 1px solid rgba(251,191,36,0.2);
+        }
+
+        /* Vertical Markets Grid */
+        .markets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .market-card {
+            background: rgba(15,23,42,0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .market-card:hover {
+            transform: translateY(-8px);
+            border-color: #fbbf24;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.4);
+        }
+        .market-image {
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .market-icon {
+            position: absolute;
+            bottom: -25px;
+            left: 20px;
+            background: linear-gradient(135deg, #2563eb, #fbbf24);
+            width: 60px;
+            height: 60px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .market-content {
+            padding: 1.8rem 1.5rem 1.5rem;
+            flex: 1;
+        }
+        .market-content h3 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        .market-desc {
+            color: #94a3b8;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .solutions-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+        .solutions-list li {
+            padding: 0.4rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+        .solutions-list li i { color: #fbbf24; width: 20px; }
+        .btn-market {
+            background: rgba(37,99,235,0.3);
+            border: 1px solid rgba(251,191,36,0.4);
+            color: #fbbf24;
+            padding: 0.7rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 1rem;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-market:hover {
+            background: #fbbf24;
+            color: #0f172a;
+            border-color: #fbbf24;
+        }
+
+        /* Cases / Diferenciais */
+        .cases-section {
+            margin: 3rem 0;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            margin: 2rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+        }
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+        .case-item {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(8px);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .case-item:hover { border-color: #fbbf24; transform: translateY(-5px); }
+        .case-item i { font-size: 2.5rem; color: #fbbf24; margin-bottom: 1rem; }
+
+        /* Contact Block */
+        .contact-block {
+            background: rgba(15,23,42,0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 2.5rem;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(251,191,36,0.3);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px #2563eb; }
+
+        /* Footer */
+        footer {
+            background: rgba(5,15,40,0.95);
+            backdrop-filter: blur(10px);
+            color: #94a3b8;
+            padding: 3rem 5% 1.5rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(251,191,36,0.2);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem;
+        }
+        .footer-col a { color: #94a3b8; text-decoration: none; display: block; margin: 0.5rem 0; }
+        .footer-col a:hover { color: #fbbf24; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .whatsapp-float {
+            position: fixed; bottom: 30px; right: 30px; background: #25D366; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;
+            font-size: 2rem; z-index: 100; text-decoration: none; animation: bounce 2s infinite;
+        }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        .top-arrow {
+            position: fixed; bottom: 110px; right: 30px; background: #fbbf24; width: 50px; height: 50px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0f172a;
+            font-size: 1.5rem; cursor: pointer; z-index: 99;
+        }
+        @media (max-width:768px){
+            .whatsapp-float{width:50px;height:50px;font-size:1.5rem}
+            .top-arrow{width:40px;height:40px;bottom:90px}
+        }
+    </style>
+</head>
+<body>
+
+<div id="loader"><div class="loader-spinner"></div></div>
+<div class="cursor-glow"></div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="contact-info">
+        <span><i class="fas fa-phone-alt"></i> 946 299 834 | 959 777 301</span>
+        <span><i class="fas fa-map-marker-alt"></i> Luanda, Viana, Vila Flor</span>
+        <span><i class="fas fa-envelope"></i> dpedroservice@gmail.com</span>
+    </div>
+    <div class="social-links">
+        <a href="https://wa.me/244946299834" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="mailto:dpedroservice@gmail.com"><i class="fas fa-envelope"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook"></i></a>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav>
+    <div class="logo">
+        <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+            <img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="D.PEDRO SOLUÇÕES">
+            <div class="logo-text">D.PEDRO SOLUÇÕES <small>COMÉRCIO E PRESTAÇÃO DE SERVIÇOS</small></div>
+        </a>
+    </div>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <div class="nav-links" id="navLinks">
+        <a href="index.html">Início</a>
+        <a href="quem-somos.html">Quem somos</a>
+        <a href="mercados-verticais.html" class="active">Mercados Verticais</a>
+        <a href="solucoes.html">Soluções</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="recrutamento.html">Recrutamento</a>
+        <a href="contactos.html">Contactos</a>
+        <a href="curso.html">Curso</a>
+        <a href="projetos.html">Projetos</a>
+        <a href="gerenciamento.html">Gerenciamento</a>
+        <a href="donload.html" class="btn-app"><i class="fas fa-download"></i> App</a>
+    </div>
+</nav>
+
+<main class="container">
+    <div class="page-header">
+        <h1><i class="fas fa-chart-line"></i> Mercados Verticais</h1>
+        <p>Soluções especializadas por setor: segurança, energia e automação para cada necessidade</p>
+    </div>
+
+    <div class="intro-text">
+        <i class="fas fa-building" style="font-size: 2rem; color: #fbbf24; margin-bottom: 0.5rem; display: inline-block;"></i>
+        <p style="font-size: 1.1rem;">Na D.PEDRO SOLUÇÕES, desenvolvemos projetos sob medida para diferentes segmentos. Conheça nossas soluções por mercado e descubra como podemos proteger, otimizar e inovar o seu negócio.</p>
+    </div>
+
+    <!-- Mercados Verticais Grid -->
+    <div class="markets-grid" id="marketsGrid"></div>
+
+    <!-- Cases de sucesso / diferenciais por setor -->
+    <div class="cases-section">
+        <h2 class="section-title"><i class="fas fa-star"></i> Por que escolher a D.PEDRO para cada setor?</h2>
+        <div class="cases-grid" id="casesGrid"></div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="contact-block">
+        <span class="contact-highlight"><i class="fas fa-calculator"></i> Solicite uma análise para o seu segmento</span>
+        <button class="btn-primary" id="btnOrcamentoVertical"><i class="fab fa-whatsapp"></i> Falar com especialista</button>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col"><strong>D.PEDRO SOLUÇÕES</strong><p>Comércio e Prestação de Serviços, Lda.</p><p>Luanda, Angola - Vila Flor, Kilamba</p></div>
+        <div class="footer-col"><strong>Contactos</strong><p><i class="fas fa-phone"></i> +244 946 299 834</p><p><i class="fas fa-envelope"></i> dpedroservice@gmail.com</p></div>
+        <div class="footer-col"><strong>Horário</strong><p>Segunda - Sexta: 8h - 18h</p><p>Sábado: 8h - 13h</p><p>Suporte Técnico 24/7</p></div>
+        <div class="footer-col"><strong>Links</strong><a href="index.html">Início</a><a href="quem-somos.html">Quem somos</a><a href="mercados-verticais.html">Mercados Verticais</a><a href="contactos.html">Contactos</a></div>
+    </div>
+    <div class="footer-bottom"><div>© 2026 D.PEDRO SOLUÇÕES – Todos os direitos reservados</div><div><i class="fas fa-heart" style="color:#fbbf24"></i> Tecnologia e Segurança</div></div>
+</footer>
+
+<a href="https://wa.me/244946299834" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<div class="top-arrow" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></div>
+
+<script>
+    // Loader
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        }, 800);
+    });
+
+    // Cursor glow (desktop)
+    if (window.innerWidth > 768) {
+        const glow = document.querySelector('.cursor-glow');
+        document.addEventListener('mousemove', (e) => glow.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`);
+    }
+
+    // Mobile menu
+    function toggleMenu() { document.getElementById('navLinks').classList.toggle('active'); }
+    document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) document.getElementById('navLinks').classList.remove('active');
+    }));
+
+    // Dados dos Mercados Verticais
+    const mercados = [
+        {
+            nome: "Condomínios & Residências",
+            icone: "fa-building",
+            imagem: "https://i.ibb.co/9kWxfbHw/condominios.jpg",
+            descricao: "Segurança residencial completa com tecnologias de ponta para garantir tranquilidade e controle de acesso 24/7.",
+            solucoes: ["CFTV IP e analógico", "Porteiros eletrônicos e vídeo porteiro", "Cerca elétrica e sensores perimetrais", "Controlo de acesso biométrico", "Automação de portões e iluminação"]
+        },
+        {
+            nome: "Indústria & Logística",
+            icone: "fa-industry",
+            imagem: "https://i.ibb.co/0yxkC7Pg/industria.jpg",
+            descricao: "Proteção de ativos, controle de produção, monitoramento de frotas e segurança operacional para indústrias.",
+            solucoes: ["Câmaras PTZ com zoom óptico", "Deteção de incêndio e gases", "Controlo de acesso para colaboradores", "Rastreamento de ativos via GPS", "Sistemas Off Grid para áreas remotas"]
+        },
+        {
+            nome: "Comércio & Varejo",
+            icone: "fa-store",
+            imagem: "https://i.ibb.co/RGpjFS2t/comercio.png",
+            descricao: "Redução de perdas, gestão de clientes e segurança para lojas, supermercados e shopping centers.",
+            solucoes: ["Câmaras ant furto (lente olho de peixe)", "Sistemas PDV integrados", "Contagem de pessoas e heatmap", "Alarmes EAS", "Monitoramento remoto via APP"]
+        },
+        {
+            nome: "Infraestruturas Críticas",
+            icone: "fa-shield-virus",
+            imagem: "https://i.ibb.co/yFxYKkjq/tecnico.png",
+            descricao: "Segurança máxima para aeroportos, portos, barragens, centrais elétricas e instalações estratégicas.",
+            solucoes: ["Videovigilância com análise de IA", "Barreiras perimetrais e radar", "Biometria facial avançada", "Gestão centralizada VMS", "Backup de energia e redundância"]
+        },
+        {
+            nome: "Energia & Off Grid",
+            icone: "fa-solar-panel",
+            imagem: "https://i.ibb.co/pjRd83wc/energia.png",
+            descricao: "Sistemas solares autónomos, híbridos e soluções de eficiência energética para zonas sem rede elétrica.",
+            solucoes: ["Painéis solares e inversores", "Baterias de lítio e estacionárias", "Iluminação pública solar", "Bombagem de água solar", "Monitoramento remoto de energia"]
+        },
+        {
+            nome: "Serviços & Escritórios",
+            icone: "fa-briefcase",
+            imagem: "https://i.ibb.co/FLs7FFRx/cftv.png",
+            descricao: "Ambientes corporativos seguros, com controle de acesso, redes estruturadas e sistemas de gestão.",
+            solucoes: ["Controlo de ponto biométrico", "Redes de dados e Wi-Fi empresarial", "Videoconferência e CFTV", "Sistemas de alarme e incêndio", "Suporte técnico 24/7"]
+        }
+    ];
+
+    const cases = [
+        { titulo: "Redução de 70% em furtos", icone: "fa-chart-line", desc: "No setor varejista com sistema antifurto + CFTV IA." },
+        { titulo: "Economia energética 45%", icone: "fa-leaf", desc: "Em condomínios com iluminação solar e controlo de acesso." },
+        { titulo: "Certificação ISO em andamento", icone: "fa-certificate", desc: "Processos alinhados para indústrias e infraestruturas." },
+        { titulo: "Suporte 24/7 local", icone: "fa-headset", desc: "Equipa técnica de prontidão para todos os segmentos." }
+    ];
+
+    function popularMercados() {
+        const grid = document.getElementById('marketsGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        mercados.forEach(m => {
+            const card = document.createElement('div');
+            card.className = 'market-card';
+            card.innerHTML = `
+                <div class="market-image" style="background-image: linear-gradient(0deg, rgba(15,23,42,0.8), rgba(0,0,0,0.3)), url('${m.imagem}'); background-size: cover;">
+                    <div class="market-icon"><i class="fas ${m.icone}"></i></div>
+                </div>
+                <div class="market-content">
+                    <h3>${m.nome}</h3>
+                    <p class="market-desc">${m.descricao}</p>
+                    <ul class="solutions-list">
+                        ${m.solucoes.slice(0, 4).map(s => `<li><i class="fas fa-check-circle"></i> ${s}</li>`).join('')}
+                        ${m.solucoes.length > 4 ? `<li><i class="fas fa-plus-circle"></i> + outras soluções personalizadas</li>` : ''}
+                    </ul>
+                    <button class="btn-market" onclick="solicitarOrcamentoVertical('${m.nome}')"><i class="fab fa-whatsapp"></i> Orçamento para ${m.nome.split('&')[0]}</button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function popularCases() {
+        const grid = document.getElementById('casesGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        cases.forEach(c => {
+            const item = document.createElement('div');
+            item.className = 'case-item';
+            item.innerHTML = `<i class="fas ${c.icone}"></i><h4>${c.titulo}</h4><p style="color:#94a3b8;">${c.desc}</p>`;
+            grid.appendChild(item);
+        });
+    }
+
+    function solicitarOrcamentoVertical(mercado) {
+        const mensagem = `Olá! Gostaria de solicitar um orçamento personalizado para o mercado *${mercado}* com a D.PEDRO SOLUÇÕES. Podem me ajudar?`;
+        window.open(`https://wa.me/244946299834?text=${encodeURIComponent(mensagem)}`, '_blank');
+        toastr.success(`Redirecionando para orçamento de ${mercado}`);
+    }
+
+    // Botão geral
+    document.getElementById('btnOrcamentoVertical')?.addEventListener('click', () => {
+        window.open('https://wa.me/244946299834?text=Olá! Gostaria de uma consultoria para soluções no meu segmento de mercado (Mercados Verticais).', '_blank');
+        toastr.info('Fale connosco sobre seu setor');
+    });
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+        popularMercados();
+        popularCases();
+        toastr.options = { closeButton: true, progressBar: true, positionClass: "toast-top-right", timeOut: "4000" };
+        setTimeout(() => {
+            Swal.fire({
+                title: '🏭 Soluções por mercado',
+                text: 'Descubra as melhores tecnologias para condomínios, indústria, comércio e mais.',
+                icon: 'info',
+                background: '#0f172a',
+                color: 'white',
+                confirmButtonColor: '#fbbf24',
+                confirmButtonText: 'Explorar setores'
+            });
+        }, 2000);
+    });
+
+    // Expor função global
+    window.solicitarOrcamentoVertical = solicitarOrcamentoVertical;
+    window.toggleMenu = toggleMenu;
+</script>
+</body>
+</html>

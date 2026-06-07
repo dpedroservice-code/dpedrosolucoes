@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Catálogo | D.PEDRO SOLUÇÕES – Tecnologia, Segurança & Energia</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Catálogo completo de equipamentos e soluções: CFTV, controlo de acesso, energia solar, redes, alarmes, cerca elétrica, software e gráfica. Produtos de alta tecnologia em Angola.">
+    <meta name="keywords" content="Catálogo D.PEDRO, produtos segurança, câmaras, inversores solares, controlo de acesso, Angola">
+    <meta name="author" content="D.PEDRO SOLUÇÕES">
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://i.ibb.co/fVJjMXtL/logo1.png" type="image/x-icon">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/hFnw5Br7/logo.jpg">
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #2563eb15, transparent 30%),
+                        radial-gradient(circle at bottom right, #fbbf2415, transparent 30%),
+                        #0f172a;
+            color: #e2e8f0;
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(37,99,235,0.3);
+            border-top-color: #fbbf24;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Cursor glow */
+        @media (min-width: 769px) {
+            .cursor-glow {
+                position: fixed;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: #2563eb;
+                pointer-events: none;
+                filter: blur(15px);
+                z-index: 9999;
+                transition: transform 0.1s ease;
+            }
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(251,191,36,0.3);
+        }
+        .top-bar .contact-info { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+        .top-bar .contact-info i { color: #fbbf24; }
+        .social-links a { color: #cbd5e1; margin-left: 1rem; transition: 0.2s; }
+        .social-links a:hover { color: #fbbf24; transform: translateY(-2px); }
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; text-align: center; gap: 0.5rem; }
+            .top-bar .contact-info { justify-content: center; }
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { display: flex; align-items: center; gap: 0.75rem; }
+        .logo img { height: 55px; transition: 0.3s; }
+        .logo-text { font-weight: 700; font-size: 1.2rem; color: white; line-height: 1.2; }
+        .logo-text small { display: block; font-size: 0.55rem; color: #94a3b8; }
+        .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+        .nav-links a, .nav-links button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-weight: 500;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .nav-links a:hover, .nav-links a.active { background: rgba(37,99,235,0.3); color: #fbbf24; }
+        .btn-app { background: linear-gradient(135deg, #22c55e, #16a34a) !important; color: white !important; }
+        .menu-toggle { display: none; cursor: pointer; font-size: 1.5rem; background: none; border: none; color: white; }
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(15,23,42,0.98);
+                backdrop-filter: blur(15px);
+                padding: 1.5rem;
+                gap: 0.8rem;
+                z-index: 99;
+                border-bottom: 1px solid rgba(251,191,36,0.3);
+            }
+            .nav-links.active { display: flex; }
+            .menu-toggle { display: block; }
+        }
+
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 5%; }
+
+        /* Page Header */
+        .page-header { text-align: center; margin: 2rem 0 1rem; }
+        .page-header h1 { font-size: 2.8rem; background: linear-gradient(135deg, #ffffff, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .page-header p { color: #94a3b8; max-width: 700px; margin: 0.5rem auto; }
+
+        /* Search & Filters */
+        .search-section {
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fbbf24;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 2rem;
+            color: white;
+            font-size: 1rem;
+        }
+        .search-box input:focus { outline: none; border-color: #fbbf24; }
+        .category-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+        .filter-chip {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+        .filter-chip.active, .filter-chip:hover {
+            background: #fbbf24;
+            color: #0f172a;
+            border-color: #fbbf24;
+        }
+
+        /* Produtos Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin: 2rem 0;
+        }
+        .product-card {
+            background: rgba(15,23,42,0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            border-color: #fbbf24;
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.4);
+        }
+        .product-image {
+            height: 180px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .product-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: #fbbf24;
+            font-weight: 600;
+        }
+        .product-content {
+            padding: 1.2rem;
+            flex: 1;
+        }
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.3rem;
+        }
+        .product-category {
+            font-size: 0.7rem;
+            color: #fbbf24;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+        .product-desc {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        .product-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+        }
+        .product-feature {
+            background: rgba(37,99,235,0.3);
+            color: #cbd5e1;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+        .btn-catalog {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: 0.2s;
+        }
+        .btn-catalog:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(34,197,94,0.3); }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+
+        /* Contact Block */
+        .contact-block {
+            background: rgba(15,23,42,0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 2.5rem;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(251,191,36,0.3);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(5,15,40,0.95);
+            backdrop-filter: blur(10px);
+            color: #94a3b8;
+            padding: 3rem 5% 1.5rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(251,191,36,0.2);
+        }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; }
+        .footer-col a { color: #94a3b8; text-decoration: none; display: block; margin: 0.5rem 0; }
+        .footer-col a:hover { color: #fbbf24; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .whatsapp-float {
+            position: fixed; bottom: 30px; right: 30px; background: #25D366; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;
+            font-size: 2rem; z-index: 100; text-decoration: none; animation: bounce 2s infinite;
+        }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        .top-arrow {
+            position: fixed; bottom: 110px; right: 30px; background: #fbbf24; width: 50px; height: 50px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0f172a;
+            font-size: 1.5rem; cursor: pointer; z-index: 99;
+        }
+        @media (max-width:768px){
+            .whatsapp-float{width:50px;height:50px;font-size:1.5rem}
+            .top-arrow{width:40px;height:40px;bottom:90px}
+        }
+    </style>
+</head>
+<body>
+
+<div id="loader"><div class="loader-spinner"></div></div>
+<div class="cursor-glow"></div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="contact-info">
+        <span><i class="fas fa-phone-alt"></i> 946 299 834 | 959 777 301</span>
+        <span><i class="fas fa-map-marker-alt"></i> Luanda, Viana, Vila Flor</span>
+        <span><i class="fas fa-envelope"></i> dpedroservice@gmail.com</span>
+    </div>
+    <div class="social-links">
+        <a href="https://wa.me/244946299834" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="mailto:dpedroservice@gmail.com"><i class="fas fa-envelope"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook"></i></a>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav>
+    <div class="logo">
+        <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+            <img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="D.PEDRO SOLUÇÕES">
+            <div class="logo-text">D.PEDRO SOLUÇÕES <small>COMÉRCIO E PRESTAÇÃO DE SERVIÇOS</small></div>
+        </a>
+    </div>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <div class="nav-links" id="navLinks">
+        <a href="index.html">Início</a>
+        <a href="quem-somos.html">Quem somos</a>
+        <a href="mercados-verticais.html">Mercados Verticais</a>
+        <a href="solucoes.html">Soluções</a>
+        <a href="catalogo.html" class="active">Catálogo</a>
+        <a href="recrutamento.html">Recrutamento</a>
+        <a href="contactos.html">Contactos</a>
+        <a href="curso.html">Curso</a>
+        <a href="projetos.html">Projetos</a>
+        <a href="gerenciamento.html">Gerenciamento</a>
+        <a href="donload.html" class="btn-app"><i class="fas fa-download"></i> App</a>
+    </div>
+</nav>
+
+<main class="container">
+    <div class="page-header">
+        <h1><i class="fas fa-boxes"></i> Catálogo de Produtos</h1>
+        <p>Equipamentos de alta performance para segurança, energia, redes e comunicação</p>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="search-section">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Buscar produto... (ex: câmera, inversor, fechadura)">
+        </div>
+        <div class="category-filters" id="categoryFilters">
+            <span class="filter-chip active" data-cat="todos">Todos</span>
+            <span class="filter-chip" data-cat="cftv">CFTV</span>
+            <span class="filter-chip" data-cat="acesso">Controlo Acesso</span>
+            <span class="filter-chip" data-cat="alarme">Alarmes & Cerca</span>
+            <span class="filter-chip" data-cat="energia">Energia Solar</span>
+            <span class="filter-chip" data-cat="redes">Redes</span>
+            <span class="filter-chip" data-cat="grafica">Gráfica</span>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="products-grid" id="productsGrid"></div>
+    
+    <!-- Contact CTA -->
+    <div class="contact-block">
+        <span class="contact-highlight"><i class="fas fa-tags"></i> Não encontrou o produto? Solicite um orçamento personalizado</span>
+        <button class="btn-primary" id="btnOrcamentoCatalogo"><i class="fab fa-whatsapp"></i> Consultar preços</button>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col"><strong>D.PEDRO SOLUÇÕES</strong><p>Comércio e Prestação de Serviços, Lda.</p><p>Luanda, Angola - Vila Flor, Kilamba</p></div>
+        <div class="footer-col"><strong>Contactos</strong><p><i class="fas fa-phone"></i> +244 946 299 834</p><p><i class="fas fa-envelope"></i> dpedroservice@gmail.com</p></div>
+        <div class="footer-col"><strong>Horário</strong><p>Segunda - Sexta: 8h - 18h</p><p>Sábado: 8h - 13h</p><p>Suporte Técnico 24/7</p></div>
+        <div class="footer-col"><strong>Links</strong><a href="index.html">Início</a><a href="quem-somos.html">Quem somos</a><a href="catalogo.html">Catálogo</a><a href="contactos.html">Contactos</a></div>
+    </div>
+    <div class="footer-bottom"><div>© 2026 D.PEDRO SOLUÇÕES – Todos os direitos reservados</div><div><i class="fas fa-heart" style="color:#fbbf24"></i> Tecnologia e Segurança</div></div>
+</footer>
+
+<a href="https://wa.me/244946299834" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<div class="top-arrow" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></div>
+
+<script>
+    // Loader
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        }, 800);
+    });
+
+    // Cursor glow
+    if (window.innerWidth > 768) {
+        const glow = document.querySelector('.cursor-glow');
+        document.addEventListener('mousemove', (e) => glow.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`);
+    }
+
+    function toggleMenu() { document.getElementById('navLinks').classList.toggle('active'); }
+    document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) document.getElementById('navLinks').classList.remove('active');
+    }));
+
+    // Base de dados de produtos do catálogo (25+ produtos)
+    const produtos = [
+        // CFTV
+        { nome: "Câmera IP 4K Hikvision", categoria: "cftv", descricao: "Câmera Dome com resolução 8MP, IR noturno 30m, PoE, detecção inteligente.", features: ["4K", "IR 30m", "PoE", "IA"], imagem: "https://i.ibb.co/FLs7FFRx/cftv.png" },
+        { nome: "Câmera PTZ 5MP", categoria: "cftv", descricao: "Câmera speed dome com zoom óptico 25x, autotracking, resistente a intempéries.", features: ["PTZ", "25x zoom", "IP66"], imagem: "https://i.ibb.co/FLs7FFRx/cftv.png" },
+        { nome: "NVR 16 Canais 4K", categoria: "cftv", descricao: "Gravador de rede com suporte H.265+, armazenamento até 16TB, acesso remoto.", features: ["16CH", "4K", "H.265+", "APP"], imagem: "https://i.ibb.co/j9DSLVHR/nvr-32.jpg" },
+        { nome: "Câmera WiFi 360º", categoria: "cftv", descricao: "Câmera indoor com rotação panorâmica, detecção de movimento, cartão SD.", features: ["WiFi", "360º", "MicroSD"], imagem: "https://i.ibb.co/FLs7FFRx/cftv.png" },
+        // Controlo Acesso
+        { nome: "Leitor Biométrico Facial", categoria: "acesso", descricao: "Reconhecimento facial e digital, capacidade 2000 usuários, relógio de ponto.", features: ["Facial", "Digital", "Ponto"], imagem: "https://i.ibb.co/fzstMFqM/biometrico.jpg" },
+        { nome: "Fechadura Magnética 600kg", categoria: "acesso", descricao: "Fechadura eletromagnética com força 600Lbs, sensor de porta.", features: ["600Lbs", "12V", "Sensor"], imagem: "https://i.ibb.co/fzstMFqM/biometrico.jpg" },
+        { nome: "Controlador de Acesso 2 portas", categoria: "acesso", descricao: "Central de controle para 2 leitores, software de gestão, 10.000 usuários.", features: ["TCP/IP", "Software", "Logs"], imagem: "https://i.ibb.co/fzstMFqM/biometrico.jpg" },
+        // Alarmes & Cerca
+        { nome: "Central de Alarme Wireless", categoria: "alarme", descricao: "Central com GSM/GPRS, até 32 zonas, APP, sensores de abertura.", features: ["Wireless", "GSM", "APP"], imagem: "https://i.ibb.co/tPhxpKFD/central-alarme.png" },
+        { nome: "Sensor de Movimento PIR", categoria: "alarme", descricao: "Sensor infravermelho com alcance 12m, anti-mascara, ângulo 90°.", features: ["12m", "Anti-mascara", "90°"], imagem: "https://i.ibb.co/vCgbxVr9/sensor-pir.png" },
+        { nome: "Cerca Elétrica Energizador", categoria: "alarme", descricao: "Energizador 10kV, pulsos de alta tensão, monitoramento remoto.", features: ["10kV", "IP65", "Sensor corte"], imagem: "https://i.ibb.co/FLP81SfP/cerca-eletrica.png" },
+        // Energia Solar
+        { nome: "Painel Solar 550W Monocristalino", categoria: "energia", descricao: "Painel de alto rendimento, garantia 25 anos, para off-grid e on-grid.", features: ["550W", "Monocristalino", "IP68"], imagem: "https://i.ibb.co/pjRd83wc/energia.png" },
+        { nome: "Inversor Solar Híbrido 5kW", categoria: "energia", descricao: "Inversor Off-Grid com entrada solar, MPPT 80A, tela LCD.", features: ["5kW", "MPPT", "Bateria Litio"], imagem: "https://i.ibb.co/pjRd83wc/energia.png" },
+        { nome: "Bateria de Lítio 5kWh", categoria: "energia", descricao: "Bateria recarregável de ciclo profundo, 48V, comunicação com inversor.", features: ["Lítio", "5kWh", "Ciclo profundo"], imagem: "https://i.ibb.co/pjRd83wc/energia.png" },
+        { nome: "Controlador MPPT 60A", categoria: "energia", descricao: "Controlador de carga solar com display, proteções, adequado para 12/24/48V.", features: ["60A", "MPPT", "12/24/48V"], imagem: "https://i.ibb.co/pjRd83wc/energia.png" },
+        // Redes
+        { nome: "Switch PoE 24 portas", categoria: "redes", descricao: "Switch gerenciável, 24 portas PoE+ 370W, VLAN, QoS.", features: ["24 portas", "PoE+", "Gerenciável"], imagem: "https://i.ibb.co/FLs7FFRx/cftv.png" },
+        { nome: "Roteador WiFi6", categoria: "redes", descricao: "Roteador dual band com tecnologia WiFi6, alcance estendido, segurança WPA3.", features: ["WiFi6", "Dual band", "Mesh"], imagem: "https://i.ibb.co/FLs7FFRx/cftv.png" },
+        { nome: "Fibra Óptica e Conversores", categoria: "redes", descricao: "Cabo de fibra single-mode, conversores de mídia, patch cords.", features: ["SC/LC", "Single-mode", "20km"], imagem: "https://i.ibb.co/FLs7FFRx/cftv.png" },
+        // Gráfica
+        { nome: "Cartões de Visita Premium", categoria: "grafica", descricao: "Impressão offset 400g, cores vivas, acabamento laminado.", features: ["400g", "Laminação", "Offset"], imagem: "https://i.ibb.co/0RcSnHnv/impressora.png" },
+        { nome: "Flyers A5 (5000 unidades)", categoria: "grafica", descricao: "Panfletos coloridos em papel couché 150g, design personalizado.", features: ["Couchê", "Full color", "Entrega"], imagem: "https://i.ibb.co/0RcSnHnv/impressora.png" },
+        { nome: "Brindes Personalizados", categoria: "grafica", descricao: "Canetas, ecobags, bonés, garrafas térmicas com gravação de logo.", features: ["Gravura", "Sublimação", "Variedade"], imagem: "https://i.ibb.co/0RcSnHnv/impressora.png" },
+        { nome: "Banners e Lonas", categoria: "grafica", descricao: "Banners em lona 440g com ilhós, ideal para eventos e fachadas.", features: ["Lona", "4x3m", "Personalizado"], imagem: "https://i.ibb.co/0RcSnHnv/impressora.png" },
+        { nome: "Adesivos Vinil", categoria: "grafica", descricao: "Corte digital, vinil resistente à água, para automóveis e vitrines.", features: ["Vinil", "Recorte", "UV"], imagem: "https://i.ibb.co/0RcSnHnv/impressora.png" }
+    ];
+
+    let currentCategory = "todos";
+    let searchTerm = "";
+
+    function renderCatalog() {
+        const grid = document.getElementById('productsGrid');
+        if (!grid) return;
+        
+        const filtered = produtos.filter(prod => {
+            const matchCat = currentCategory === "todos" || prod.categoria === currentCategory;
+            const matchSearch = searchTerm === "" || 
+                prod.nome.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                prod.descricao.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                prod.features.some(f => f.toLowerCase().includes(searchTerm.toLowerCase()));
+            return matchCat && matchSearch;
+        });
+        
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div class="no-results"><i class="fas fa-box-open"></i> <p>Nenhum produto encontrado. <br>Entre em contato para soluções personalizadas.</p><button class="btn-primary" style="margin-top:1rem" onclick="window.open('https://wa.me/244946299834?text=Olá! Gostaria de informações sobre produtos não listados no catálogo.', '_blank')"><i class="fab fa-whatsapp"></i> Consultar disponibilidade</button></div>`;
+            return;
+        }
+        
+        grid.innerHTML = '';
+        filtered.forEach(prod => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            let catLabel = "";
+            switch(prod.categoria) {
+                case 'cftv': catLabel = "CFTV"; break;
+                case 'acesso': catLabel = "Controlo Acesso"; break;
+                case 'alarme': catLabel = "Alarmes"; break;
+                case 'energia': catLabel = "Energia Solar"; break;
+                case 'redes': catLabel = "Redes"; break;
+                case 'grafica': catLabel = "Gráfica"; break;
+                default: catLabel = "Produto";
+            }
+            card.innerHTML = `
+                <div class="product-image" style="background-image: url('${prod.imagem}');">
+                    <div class="product-badge">Novo</div>
+                </div>
+                <div class="product-content">
+                    <div class="product-title">${prod.nome}</div>
+                    <div class="product-category">${catLabel}</div>
+                    <div class="product-desc">${prod.descricao}</div>
+                    <div class="product-features">
+                        ${prod.features.map(f => `<span class="product-feature">${f}</span>`).join('')}
+                    </div>
+                    <button class="btn-catalog" onclick="solicitarProduto('${prod.nome.replace(/'/g, "\\'")}')"><i class="fab fa-whatsapp"></i> Pedir cotação</button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function solicitarProduto(nomeProduto) {
+        const msg = `Olá! Tenho interesse no produto *${nomeProduto}* do catálogo da D.PEDRO SOLUÇÕES. Podem enviar preço e disponibilidade?`;
+        window.open(`https://wa.me/244946299834?text=${encodeURIComponent(msg)}`, '_blank');
+        toastr.success(`Consulta enviada para ${nomeProduto}`);
+    }
+
+    // Event Listeners
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        searchTerm = e.target.value;
+        renderCatalog();
+    });
+    
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            currentCategory = chip.getAttribute('data-cat');
+            renderCatalog();
+        });
+    });
+    
+    document.getElementById('btnOrcamentoCatalogo')?.addEventListener('click', () => {
+        window.open('https://wa.me/244946299834?text=Olá! Gostaria de solicitar um orçamento para produtos do catálogo. Podem me ajudar?', '_blank');
+        toastr.info('Fale connosco para obter os melhores preços');
+    });
+    
+    toastr.options = { closeButton: true, progressBar: true, positionClass: "toast-top-right", timeOut: "4000" };
+    
+    renderCatalog();
+    
+    setTimeout(() => {
+        Swal.fire({
+            title: '📦 Catálogo Completo',
+            text: 'Mais de 25 produtos disponíveis. Filtre por categoria e solicite cotações via WhatsApp.',
+            icon: 'success',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24',
+            confirmButtonText: 'Explorar'
+        });
+    }, 1500);
+    
+    window.solicitarProduto = solicitarProduto;
+    window.toggleMenu = toggleMenu;
+</script>
+</body>
+</html>

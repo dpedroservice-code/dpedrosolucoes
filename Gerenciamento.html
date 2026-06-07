@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Gerenciamento | D.PEDRO SOLUÇÕES – Portal de Gestão</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Área de gestão integrada para clientes e parceiros: acompanhamento de projetos, suporte técnico, monitoramento de sistemas e relatórios.">
+    <meta name="keywords" content="gestão de projetos, suporte técnico, monitoramento CFTV, portal cliente D.PEDRO">
+    <meta name="author" content="D.PEDRO SOLUÇÕES">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://i.ibb.co/fVJjMXtL/logo1.png" type="image/x-icon">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/hFnw5Br7/logo.jpg">
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #2563eb15, transparent 30%),
+                        radial-gradient(circle at bottom right, #fbbf2415, transparent 30%),
+                        #0f172a;
+            color: #e2e8f0;
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(37,99,235,0.3);
+            border-top-color: #fbbf24;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Cursor glow */
+        @media (min-width: 769px) {
+            .cursor-glow {
+                position: fixed;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: #2563eb;
+                pointer-events: none;
+                filter: blur(15px);
+                z-index: 9999;
+                transition: transform 0.1s ease;
+            }
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(251,191,36,0.3);
+        }
+        .top-bar .contact-info { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+        .top-bar .contact-info i { color: #fbbf24; }
+        .social-links a { color: #cbd5e1; margin-left: 1rem; transition: 0.2s; }
+        .social-links a:hover { color: #fbbf24; transform: translateY(-2px); }
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; text-align: center; gap: 0.5rem; }
+            .top-bar .contact-info { justify-content: center; }
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { display: flex; align-items: center; gap: 0.75rem; }
+        .logo img { height: 55px; transition: 0.3s; }
+        .logo-text { font-weight: 700; font-size: 1.2rem; color: white; line-height: 1.2; }
+        .logo-text small { display: block; font-size: 0.55rem; color: #94a3b8; }
+        .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+        .nav-links a, .nav-links button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-weight: 500;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .nav-links a:hover, .nav-links a.active { background: rgba(37,99,235,0.3); color: #fbbf24; }
+        .btn-app { background: linear-gradient(135deg, #22c55e, #16a34a) !important; color: white !important; }
+        .menu-toggle { display: none; cursor: pointer; font-size: 1.5rem; background: none; border: none; color: white; }
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(15,23,42,0.98);
+                backdrop-filter: blur(15px);
+                padding: 1.5rem;
+                gap: 0.8rem;
+                z-index: 99;
+                border-bottom: 1px solid rgba(251,191,36,0.3);
+            }
+            .nav-links.active { display: flex; }
+            .menu-toggle { display: block; }
+        }
+
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 5%; }
+
+        /* Page Header */
+        .page-header { text-align: center; margin: 2rem 0 1rem; }
+        .page-header h1 { font-size: 2.5rem; background: linear-gradient(135deg, #ffffff, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .page-header p { color: #94a3b8; max-width: 700px; margin: 0.5rem auto; }
+
+        /* Stats Cards */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .stat-card {
+            background: rgba(15,23,42,0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat-card i { font-size: 2rem; color: #fbbf24; margin-bottom: 0.5rem; }
+        .stat-number { font-size: 2rem; font-weight: 700; color: white; }
+        .stat-label { font-size: 0.8rem; color: #94a3b8; }
+
+        /* Charts Row */
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .chart-card {
+            background: rgba(15,23,42,0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .chart-card h3 { margin-bottom: 1rem; font-size: 1.1rem; }
+
+        /* Projects Table */
+        .projects-table-wrapper {
+            overflow-x: auto;
+            margin: 2rem 0;
+            background: rgba(15,23,42,0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 0.5rem;
+        }
+        .projects-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .projects-table th, .projects-table td {
+            padding: 1rem 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .projects-table th { color: #fbbf24; }
+        .status-badge {
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .status-concluido { background: #22c55e; color: #0f172a; }
+        .status-andamento { background: #fbbf24; color: #0f172a; }
+        .status-pendente { background: #ef4444; color: white; }
+
+        /* Support Tickets */
+        .tickets-list {
+            margin: 2rem 0;
+        }
+        .ticket-item {
+            background: rgba(15,23,42,0.5);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-left: 3px solid #fbbf24;
+        }
+
+        /* Contact & Actions */
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        .btn-action {
+            background: rgba(37,99,235,0.3);
+            border: 1px solid #fbbf24;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-action:hover { background: #fbbf24; color: #0f172a; }
+
+        footer {
+            background: rgba(5,15,40,0.95);
+            backdrop-filter: blur(10px);
+            color: #94a3b8;
+            padding: 3rem 5% 1.5rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(251,191,36,0.2);
+        }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; }
+        .footer-col a { color: #94a3b8; text-decoration: none; display: block; margin: 0.5rem 0; }
+        .footer-col a:hover { color: #fbbf24; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .whatsapp-float {
+            position: fixed; bottom: 30px; right: 30px; background: #25D366; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;
+            font-size: 2rem; z-index: 100; text-decoration: none; animation: bounce 2s infinite;
+        }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        .top-arrow {
+            position: fixed; bottom: 110px; right: 30px; background: #fbbf24; width: 50px; height: 50px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0f172a;
+            font-size: 1.5rem; cursor: pointer; z-index: 99;
+        }
+        @media (max-width:768px){
+            .whatsapp-float{width:50px;height:50px;font-size:1.5rem}
+            .top-arrow{width:40px;height:40px;bottom:90px}
+        }
+    </style>
+</head>
+<body>
+
+<div id="loader"><div class="loader-spinner"></div></div>
+<div class="cursor-glow"></div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="contact-info">
+        <span><i class="fas fa-phone-alt"></i> 946 299 834 | 959 777 301</span>
+        <span><i class="fas fa-map-marker-alt"></i> Luanda, Viana, Vila Flor</span>
+        <span><i class="fas fa-envelope"></i> dpedroservice@gmail.com</span>
+    </div>
+    <div class="social-links">
+        <a href="https://wa.me/244946299834" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="mailto:dpedroservice@gmail.com"><i class="fas fa-envelope"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook"></i></a>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav>
+    <div class="logo">
+        <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+            <img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="D.PEDRO SOLUÇÕES">
+            <div class="logo-text">D.PEDRO SOLUÇÕES <small>GESTÃO & MONITORAMENTO</small></div>
+        </a>
+    </div>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <div class="nav-links" id="navLinks">
+        <a href="index.html">Início</a>
+        <a href="quem-somos.html">Quem somos</a>
+        <a href="mercados-verticais.html">Mercados Verticais</a>
+        <a href="solucoes.html">Soluções</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="recrutamento.html">Recrutamento</a>
+        <a href="contactos.html">Contactos</a>
+        <a href="curso.html">Curso</a>
+        <a href="projetos.html">Projetos</a>
+        <a href="gerenciamento.html" class="active">Gerenciamento</a>
+        <a href="donload.html" class="btn-app"><i class="fas fa-download"></i> App</a>
+    </div>
+</nav>
+
+<main class="container">
+    <div class="page-header">
+        <h1><i class="fas fa-chart-pie"></i> Central de Gerenciamento</h1>
+        <p>Acompanhamento de projetos, indicadores de desempenho, tickets de suporte e relatórios integrados.</p>
+    </div>
+
+    <!-- Stats Dashboard -->
+    <div class="dashboard-stats">
+        <div class="stat-card"><i class="fas fa-project-diagram"></i><div class="stat-number" id="totalProjetos">0</div><div class="stat-label">Projetos ativos</div></div>
+        <div class="stat-card"><i class="fas fa-check-circle"></i><div class="stat-number" id="projetosConcluidos">0</div><div class="stat-label">Concluídos</div></div>
+        <div class="stat-card"><i class="fas fa-ticket-alt"></i><div class="stat-number" id="ticketsAbertos">0</div><div class="stat-label">Tickets abertos</div></div>
+        <div class="stat-card"><i class="fas fa-camera"></i><div class="stat-number" id="camerasOnline">0</div><div class="stat-label">Câmaras online</div></div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="charts-row">
+        <div class="chart-card"><h3><i class="fas fa-chart-line"></i> Progresso de Projetos (2026)</h3><canvas id="projectsChart" width="400" height="200"></canvas></div>
+        <div class="chart-card"><h3><i class="fas fa-chart-pie"></i> Distribuição por Categoria</h3><canvas id="categoryChart" width="400" height="200"></canvas></div>
+    </div>
+
+    <!-- Tabela de Projetos em Andamento -->
+    <h2><i class="fas fa-list-check"></i> Projetos em Execução</h2>
+    <div class="projects-table-wrapper">
+        <table class="projects-table">
+            <thead><tr><th>Projeto</th><th>Cliente</th><th>Início</th><th>Progresso</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="projectsTableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- Tickets de Suporte -->
+    <h2><i class="fas fa-headset"></i> Solicitações de Suporte</h2>
+    <div class="tickets-list" id="ticketsList"></div>
+
+    <!-- Botões de Ação -->
+    <div class="action-buttons">
+        <button class="btn-action" onclick="novoTicket()"><i class="fas fa-plus-circle"></i> Abrir chamado técnico</button>
+        <button class="btn-action" onclick="gerarRelatorio()"><i class="fas fa-file-alt"></i> Gerar relatório de gestão</button>
+        <button class="btn-action" onclick="contatoSuporte()"><i class="fab fa-whatsapp"></i> Suporte urgente</button>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col"><strong>D.PEDRO SOLUÇÕES</strong><p>Gestão integrada de projetos e suporte técnico</p><p>Luanda, Angola - Vila Flor, Kilamba</p></div>
+        <div class="footer-col"><strong>Contactos</strong><p><i class="fas fa-phone"></i> +244 946 299 834</p><p><i class="fas fa-envelope"></i> dpedroservice@gmail.com</p></div>
+        <div class="footer-col"><strong>Horário</strong><p>Suporte técnico: 24/7</p><p>Gestão comercial: 8h-18h</p></div>
+        <div class="footer-col"><strong>Links</strong><a href="index.html">Início</a><a href="projetos.html">Projetos</a><a href="contactos.html">Contactos</a></div>
+    </div>
+    <div class="footer-bottom"><div>© 2026 D.PEDRO SOLUÇÕES – Central de Gestão</div><div><i class="fas fa-heart" style="color:#fbbf24"></i> Controle e eficiência</div></div>
+</footer>
+
+<a href="https://wa.me/244946299834" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<div class="top-arrow" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></div>
+
+<script>
+    // Loader
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        }, 800);
+        initDashboard();
+    });
+
+    // Cursor glow
+    if (window.innerWidth > 768) {
+        const glow = document.querySelector('.cursor-glow');
+        document.addEventListener('mousemove', (e) => glow.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`);
+    }
+
+    function toggleMenu() { document.getElementById('navLinks').classList.toggle('active'); }
+    document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) document.getElementById('navLinks').classList.remove('active');
+    }));
+
+    // Dados mockados para gestão
+    const projetosGestao = [
+        { nome: "Condomínio Kilamba - CFTV", cliente: "Condomínio Sol Nascente", inicio: "02/01/2026", progresso: 85, status: "andamento" },
+        { nome: "Energia Solar - Indústria Textil", cliente: "Textang II", inicio: "15/02/2026", progresso: 45, status: "andamento" },
+        { nome: "Controlo Acesso - Edifício Sede", cliente: "Banco Angolano", inicio: "10/03/2026", progresso: 100, status: "concluido" },
+        { nome: "Rede Fibra Óptica - Talatona", cliente: "Startup Hub", inicio: "01/04/2026", progresso: 60, status: "andamento" },
+        { nome: "Cerca Elétrica - Vila Flor", cliente: "Residencial Palmeiras", inicio: "20/05/2026", progresso: 30, status: "andamento" },
+        { nome: "Videoporteiro - Edifício Mutamba", cliente: "Imobiliária Kikuxi", inicio: "05/06/2026", progresso: 10, status: "pendente" }
+    ];
+
+    const tickets = [
+        { id: "#T1001", assunto: "Câmera offline - Condomínio Kilamba", prioridade: "Alta", status: "Em análise", data: "02/06/2026" },
+        { id: "#T1002", assunto: "Inversor solar com erro", prioridade: "Média", status: "Em andamento", data: "05/06/2026" },
+        { id: "#T1003", assunto: "Configuração de rede Wi-Fi", prioridade: "Baixa", status: "Aguardando cliente", data: "06/06/2026" }
+    ];
+
+    function initDashboard() {
+        const ativos = projetosGestao.filter(p => p.status !== 'concluido').length;
+        const concluidos = projetosGestao.filter(p => p.status === 'concluido').length;
+        document.getElementById('totalProjetos').innerText = ativos;
+        document.getElementById('projetosConcluidos').innerText = concluidos;
+        document.getElementById('ticketsAbertos').innerText = tickets.length;
+        document.getElementById('camerasOnline').innerText = "87";
+        
+        renderProjectsTable();
+        renderTickets();
+        initCharts();
+    }
+
+    function renderProjectsTable() {
+        const tbody = document.getElementById('projectsTableBody');
+        tbody.innerHTML = '';
+        projetosGestao.forEach(p => {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerHTML = `<strong>${p.nome}</strong>`;
+            row.insertCell(1).innerText = p.cliente;
+            row.insertCell(2).innerText = p.inicio;
+            row.insertCell(3).innerHTML = `<div style="background:#334155; border-radius:20px; width:100%; height:6px;"><div style="background:#fbbf24; width:${p.progresso}%; height:6px; border-radius:20px;"></div><span style="font-size:0.7rem;">${p.progresso}%</span></div>`;
+            let statusClass = '';
+            let statusText = '';
+            if(p.status === 'concluido') { statusClass = 'status-concluido'; statusText = 'Concluído'; }
+            else if(p.status === 'andamento') { statusClass = 'status-andamento'; statusText = 'Em andamento'; }
+            else { statusClass = 'status-pendente'; statusText = 'Pendente'; }
+            row.insertCell(4).innerHTML = `<span class="status-badge ${statusClass}">${statusText}</span>`;
+            row.insertCell(5).innerHTML = `<button class="btn-action" style="padding:0.2rem 0.8rem; font-size:0.7rem;" onclick="detalhesProjeto('${p.nome}')">Detalhes</button>`;
+        });
+    }
+
+    function renderTickets() {
+        const container = document.getElementById('ticketsList');
+        container.innerHTML = '';
+        tickets.forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'ticket-item';
+            div.innerHTML = `
+                <div><strong>${t.id}</strong> - ${t.assunto}<br><small>${t.data}</small></div>
+                <div><span class="status-badge" style="background:#fbbf24; color:#0f172a;">${t.status}</span></div>
+                <button class="btn-action" style="padding:0.2rem 1rem;" onclick="responderTicket('${t.id}')">Responder</button>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function initCharts() {
+        // Gráfico de barras - Progresso mensal
+        const ctxBar = document.getElementById('projectsChart').getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                datasets: [{
+                    label: 'Projetos Iniciados',
+                    data: [2, 3, 1, 2, 1, 2],
+                    backgroundColor: '#fbbf24',
+                    borderRadius: 8
+                }, {
+                    label: 'Projetos Concluídos',
+                    data: [1, 2, 1, 1, 0, 0],
+                    backgroundColor: '#22c55e',
+                    borderRadius: 8
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#cbd5e1' } } } }
+        });
+
+        // Gráfico de pizza por categoria
+        const ctxPie = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: ['CFTV & Segurança', 'Energia Solar', 'Redes & TI', 'Controlo Acesso'],
+                datasets: [{
+                    data: [4, 2, 3, 2],
+                    backgroundColor: ['#2563eb', '#fbbf24', '#22c55e', '#a855f7'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { labels: { color: '#cbd5e1' } } } }
+        });
+    }
+
+    // Funções interativas
+    function novoTicket() {
+        Swal.fire({
+            title: 'Abrir chamado técnico',
+            html: `<input type="text" id="assuntoTicket" class="swal2-input" placeholder="Assunto">
+                   <textarea id="descricaoTicket" class="swal2-textarea" placeholder="Descreva o problema..."></textarea>`,
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24',
+            confirmButtonText: 'Enviar',
+            preConfirm: () => {
+                const assunto = document.getElementById('assuntoTicket').value;
+                const desc = document.getElementById('descricaoTicket').value;
+                if(!assunto) { Swal.showValidationMessage('Assunto obrigatório'); return false; }
+                return { assunto, desc };
+            }
+        }).then((result) => {
+            if(result.isConfirmed) {
+                const msg = `*NOVO CHAMADO TÉCNICO*%0A%0A*Assunto:* ${result.value.assunto}%0A*Descrição:* ${result.value.desc}%0A*Solicitante:* Cliente D.PEDRO`;
+                window.open(`https://wa.me/244946299834?text=${encodeURIComponent(msg)}`, '_blank');
+                toastr.success('Chamado registado! Suporte entrará em contacto.');
+            }
+        });
+    }
+
+    function detalhesProjeto(nomeProjeto) {
+        Swal.fire({
+            title: nomeProjeto,
+            html: `<p>Detalhes completos do projeto podem ser solicitados à nossa equipa de gestão.</p><p><i class="fas fa-chart-line"></i> Acompanhamento em tempo real disponível para clientes.</p>`,
+            icon: 'info',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24'
+        });
+    }
+
+    function responderTicket(ticketId) {
+        Swal.fire({
+            title: `Responder ticket ${ticketId}`,
+            input: 'textarea',
+            inputPlaceholder: 'Digite sua mensagem...',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24',
+            confirmButtonText: 'Enviar resposta'
+        }).then((result) => {
+            if(result.isConfirmed && result.value) {
+                const msg = `*RESPOSTA AO TICKET ${ticketId}*%0A%0A${result.value}`;
+                window.open(`https://wa.me/244946299834?text=${encodeURIComponent(msg)}`, '_blank');
+                toastr.success('Resposta enviada!');
+            }
+        });
+    }
+
+    function gerarRelatorio() {
+        Swal.fire({
+            title: 'Relatório de Gestão',
+            html: '<p>Relatório gerado com sucesso!</p><p>Projetos ativos: 5 | Tickets abertos: 3 | Câmaras online: 87</p>',
+            icon: 'success',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24'
+        });
+    }
+
+    function contatoSuporte() {
+        window.open('https://wa.me/244946299834?text=Olá! Preciso de suporte técnico urgente. Meu projeto/sistema está com problemas.', '_blank');
+    }
+
+    toastr.options = { closeButton: true, progressBar: true, positionClass: "toast-top-right", timeOut: "4000" };
+    
+    setTimeout(() => {
+        Swal.fire({
+            title: '📊 Central de Gestão',
+            text: 'Acompanhe seus projetos, tickets de suporte e indicadores de desempenho. Utilize os botões para ações rápidas.',
+            icon: 'info',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24',
+            confirmButtonText: 'Acessar painel'
+        });
+    }, 1500);
+
+    window.novoTicket = novoTicket;
+    window.gerarRelatorio = gerarRelatorio;
+    window.contatoSuporte = contatoSuporte;
+    window.detalhesProjeto = detalhesProjeto;
+    window.responderTicket = responderTicket;
+    window.toggleMenu = toggleMenu;
+</script>
+</body>
+</html>

@@ -1,0 +1,2726 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>D.PEDRO SOLUÇÕES – Tecnologia, Segurança & Energia</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="D.PEDRO SOLUÇÕES - Tecnologia, Segurança e Energia em Angola. Soluções completas em CCTV, redes, energia solar, sistemas PDV e desenvolvimento web.">
+    <meta name="keywords" content="CCTV, Segurança Eletrónica, Energia Solar, Redes, Angola, Luanda, Viana, Vila Flor">
+    <meta name="author" content="D.PEDRO SOLUÇÕES">
+    <meta name="geo.placename" content="Luanda, Angola">
+    <meta name="geo.region" content="AO-LUA">
+
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://i.ibb.co/fVJjMXtL/logo1.png" type="image/x-icon">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/hFnw5Br7/logo.jpg">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/hFnw5Br7/logo.jpg">
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* ========== FUNDO TECNOLÓGICO COM PARTÍCULAS ========== */
+        body {
+            background:
+                radial-gradient(circle at top left, #2563eb20, transparent 30%),
+                radial-gradient(circle at bottom right, #fbbf2420, transparent 30%),
+                #0f172a;
+            color: #e2e8f0;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* ========== LOADER ========== */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background:white;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        .loader-content {
+            text-align: center;
+        }
+        .loader-content img {
+            width: 120px;
+            animation: pulse 1.5s infinite;
+        }
+        .loader-content .loader-text {
+            margin-top: 20px;
+            color: #fbbf24;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(37,99,235,0.3);
+            border-top-color: #fbbf24;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+
+        /* ========== CURSOR LUMINOSO ========== */
+        .cursor-glow {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #2563eb;
+            pointer-events: none;
+            filter: blur(15px);
+            z-index: 9999;
+            transition: transform 0.1s ease;
+        }
+        .cursor-glow::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(251,191,36,0.3);
+            top: -15px;
+            left: -15px;
+            filter: blur(10px);
+        }
+
+        /* ========== TOP BAR ========== */
+        .top-bar {
+            background: rgba(15,23,42,0.9);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 0.5rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(251,191,36,0.3);
+        }
+        .top-bar .contact-info span {
+            margin-right: 1.8rem;
+        }
+        .top-bar .contact-info i {
+            color: #fbbf24;
+            width: 1.2rem;
+        }
+        .social-links a {
+            color: #cbd5e1;
+            margin-left: 1rem;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        .social-links a:hover {
+            color: #fbbf24;
+            transform: translateY(-2px);
+        }
+
+        /* ========== NAVEGAÇÃO GLASS ========== */
+        nav {
+            background: rgba(15,23,42,0.8);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+	radius: 500
+        }
+        .logo img {
+            height: 55px;
+            transition: 0.5s;
+			radius: 500
+        }
+        .logo img:hover {
+            transform: scale(1.1) rotate(5deg);
+			radius: 500
+        }
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: white;
+            line-height: 1.2;
+        }
+        .logo-text small {
+            display: block;
+            font-size: 0.6rem;
+            font-weight: 400;
+            color: #94a3b8;
+        }
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .nav-links a, .nav-links button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-weight: 500;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        .nav-links a:hover,
+        .nav-links button:hover,
+        .nav-links a.active {
+            background: rgba(37,99,235,0.3);
+            color: #fbbf24;
+        }
+        .btn-app {
+            background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+            color: white !important;
+        }
+        .btn-app:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(34,197,94,0.3);
+        }
+
+        /* ========== CONTAINER ========== */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        /* ========== HERO PREMIUM COM VÍDEO ========== */
+        .hero-video {
+            position: relative;
+            border-radius: 2rem;
+            overflow: hidden;
+            margin: 2rem 0;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .hero-video video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(5,15,40,0.85), rgba(37,99,235,0.6));
+            z-index: 1;
+        }
+        .hero-content-premium {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: white;
+        }
+        .hero-content-premium img {
+            width: 180px;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 20px rgba(251,191,36,0.5));
+            animation: neonPulse 2s infinite;
+        }
+        @keyframes neonPulse {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(251,191,36,0.5)); }
+            50% { filter: drop-shadow(0 0 30px rgba(251,191,36,0.8)); }
+        }
+        .hero-content-premium h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-content-premium p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            opacity: 0.95;
+        }
+
+        /* ========== ESTATÍSTICAS ANIMADAS ========== */
+        .stats-section {
+            background: rgba(15,23,42,0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .stats-grid {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+            text-align: center;
+        }
+        .stat-item h2 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #fbbf24, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-item p {
+            color: #94a3b8;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ========== SERVIÇOS EM DESTAQUE ========== */
+        .highlight-services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .highlight-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+        }
+        .highlight-card:hover {
+            transform: translateY(-5px);
+            background: rgba(37,99,235,0.2);
+            border-color: #fbbf24;
+        }
+        .highlight-card i {
+            font-size: 2.5rem;
+            color: #fbbf24;
+            margin-bottom: 1rem;
+        }
+        .highlight-card h4 {
+            color: white;
+            font-size: 1rem;
+        }
+
+        /* ========== CARDS GLASSMORPHISM ========== */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .service-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(15px);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: #fbbf24;
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3);
+        }
+        .service-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .service-image i {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            color: #fbbf24;
+            font-size: 2rem;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .service-content {
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .service-content h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        .service-desc {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+        .service-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .service-feature {
+            background: rgba(37,99,235,0.3);
+            color: #fbbf24;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .btn-budget {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            padding: 0.7rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            transition: 0.2s;
+            margin-top: auto;
+        }
+        .btn-budget:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(34,197,94,0.3);
+        }
+
+        /* ========== BOTÕES COM BRILHO ========== */
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px #2563eb;
+        }
+
+        /* ========== CARROSSEL ========== */
+        .image-carousel-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+        .image-carousel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            display: flex;
+            align-items: flex-end;
+        }
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        .carousel-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        }
+        .carousel-caption {
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            color: white;
+        }
+        .carousel-caption h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .carousel-prev, .carousel-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(37,99,235,0.8);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.3s;
+        }
+        .carousel-prev:hover, .carousel-next:hover {
+            background: #fbbf24;
+            color: #0f172a;
+        }
+        .carousel-prev { left: 20px; }
+        .carousel-next { right: 20px; }
+        .carousel-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+        }
+        .dot.active {
+            background: #fbbf24;
+            transform: scale(1.3);
+        }
+
+        /* ========== WIDGET WHATSAPP ========== */
+        .whatsapp-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        .whatsapp-button {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .whatsapp-button:hover {
+            transform: scale(1.1);
+        }
+        .whatsapp-tooltip {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            color: white;
+            border: 1px solid #fbbf24;
+            display: none;
+        }
+        .whatsapp-widget:hover .whatsapp-tooltip {
+            display: block;
+        }
+
+        /* ========== PARCEIROS ========== */
+        .partners-carousel {
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+        .partners-slider {
+            display: flex;
+            animation: scroll 20s linear infinite;
+            gap: 3rem;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .partner-item {
+            text-align: center;
+            min-width: 100px;
+        }
+        .partner-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            filter: brightness(0.8);
+            transition: 0.3s;
+        }
+        .partner-item img:hover {
+            filter: brightness(1);
+            transform: scale(1.1);
+        }
+
+        /* ========== CONTATO ========== */
+        .contact-block {
+            background: rgba(15,23,42,0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(251,191,36,0.3);
+        }
+        .contact-highlight {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+        }
+        .contact-highlight i {
+            color: #fbbf24;
+        }
+
+        /* ========== MODAL ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(20px);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 2rem;
+            padding: 2rem;
+            border: 1px solid rgba(251,191,36,0.3);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 1rem;
+        }
+        .modal-header h2 {
+            color: white;
+        }
+        .modal-header h2 i {
+            color: #fbbf24;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        .input-group {
+            position: relative;
+        }
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fbbf24;
+        }
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 1rem;
+            color: white;
+        }
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #fbbf24;
+        }
+        .send-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .btn-send {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-send.whatsapp {
+            background: #25D366;
+            color: white;
+        }
+        .btn-send.email {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            background: rgba(5,15,40,0.9);
+            backdrop-filter: blur(10px);
+            color: #94a3b8;
+            padding: 3rem 5% 1.5rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(251,191,36,0.2);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        .footer-col a {
+            color: #94a3b8;
+            text-decoration: none;
+            display: block;
+            margin: 0.5rem 0;
+        }
+        .footer-col a:hover {
+            color: #fbbf24;
+        }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .top-arrow {
+            position: fixed;
+            bottom: 120px;
+            right: 30px;
+            background: #fbbf24;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0f172a;
+            cursor: pointer;
+            z-index: 99;
+            transition: 0.3s;
+        }
+        .top-arrow:hover {
+            transform: translateY(-5px);
+        }
+
+        /* ========== RESPONSIVO ========== */
+        @media (max-width: 768px) {
+            .hero-content-premium h1 { font-size: 2rem; }
+            .stats-grid { gap: 1rem; }
+            .stat-item h2 { font-size: 2rem; }
+            .image-carousel-container { height: 300px; }
+            .carousel-caption h3 { font-size: 1.2rem; }
+        }
+    </style>  
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* ========== FUNDO TECNOLÓGICO ========== */
+        body {
+            background:
+                radial-gradient(circle at top left, #2563eb15, transparent 30%),
+                radial-gradient(circle at bottom right, #fbbf2415, transparent 30%),
+                #0f172a;
+            color: #e2e8f0;
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ========== LOADER ========== */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        .loader-content {
+            text-align: center;
+        }
+        .loader-content .logo-mark-loader {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin: 0 auto 1rem;
+            animation: pulse 1.5s infinite;
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(37,99,235,0.3);
+            border-top-color: #fbbf24;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        /* ========== CURSOR LUMINOSO (Desktop) ========== */
+        @media (min-width: 769px) {
+            .cursor-glow {
+                position: fixed;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: #2563eb;
+                pointer-events: none;
+                filter: blur(15px);
+                z-index: 9999;
+                transition: transform 0.1s ease;
+            }
+        }
+
+        /* ========== TOP BAR ========== */
+        .top-bar {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 0.5rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(251,191,36,0.3);
+        }
+        .top-bar .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .top-bar .contact-info span {
+            margin-right: 0;
+        }
+        .top-bar .contact-info i {
+            color: #fbbf24;
+            width: 1.2rem;
+        }
+        .social-links a {
+            color: #cbd5e1;
+            margin-left: 1rem;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        .social-links a:hover {
+            color: #fbbf24;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+            .top-bar .contact-info {
+                justify-content: center;
+                gap: 0.8rem;
+            }
+        }
+
+        /* ========== NAVEGAÇÃO RESPONSIVA ========== */
+        nav {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+			radius: 500
+        }
+        .logo-mark {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+            transition: 0.3s;
+			radius: 500
+        }
+        .logo-mark:hover {
+            transform: scale(1.05) rotate(5deg);
+			radius: 500
+        }
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+			radius: 500
+            color: white;
+            line-height: 1.2;
+        }
+        .logo-text small {
+            display: block;
+            font-size: 0.55rem;
+            font-weight: 400;
+            color: #94a3b8;
+			
+        }
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .nav-links a, .nav-links button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-weight: 500;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .nav-links a:hover,
+        .nav-links button:hover,
+        .nav-links a.active {
+            background: rgba(37,99,235,0.3);
+            color: #fbbf24;
+        }
+        .btn-app {
+            background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+            color: white !important;
+        }
+        .btn-app:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(34,197,94,0.3);
+        }
+        
+        /* Menu Mobile */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+        .menu-toggle:hover {
+            background: rgba(37,99,235,0.3);
+        }
+        
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(15,23,42,0.98);
+                backdrop-filter: blur(15px);
+                padding: 1.5rem;
+                gap: 0.8rem;
+                border-bottom: 1px solid rgba(251,191,36,0.3);
+                z-index: 99;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .nav-links a {
+                padding: 0.8rem;
+                text-align: center;
+                width: 100%;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .logo-text {
+                font-size: 1rem;
+            }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        /* ========== HERO ========== */
+        .hero {
+            background: linear-gradient(135deg, rgba(15,23,42,0.8), rgba(37,99,235,0.3));
+            backdrop-filter: blur(5px);
+            border-radius: 2.5rem;
+            padding: 3rem 2.5rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+        }
+        .hero-content {
+            flex: 1 1 300px;
+        }
+        .hero-badge {
+            background: #fbbf24;
+            color: #0f172a;
+            font-weight: 700;
+            padding: 0.25rem 1.2rem;
+            border-radius: 40px;
+            display: inline-block;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
+        }
+        .hero p {
+            color: #cbd5e1;
+            margin-bottom: 1.5rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 0.9rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px #2563eb;
+        }
+        .hero-visual {
+            flex: 0 0 280px;
+            text-align: center;
+        }
+        .hero-logo {
+            width: 100%;
+            max-width: 250px;
+            filter: drop-shadow(0 0 20px rgba(37,99,235,0.5));
+            animation: logoGlow 2s infinite;
+        }
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(37,99,235,0.5)); }
+            50% { filter: drop-shadow(0 0 25px rgba(37,99,235,0.8)); }
+        }
+        @media (max-width: 768px) {
+            .hero { padding: 2rem 1.5rem; }
+            .hero h1 { font-size: 1.8rem; }
+            .hero-visual { flex: 0 0 100%; }
+        }
+
+        /* ========== CARROSSEL DE IMAGENS ========== */
+        .image-carousel-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .image-carousel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            display: flex;
+            align-items: flex-end;
+            border-radius: 1.5rem;
+        }
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        .carousel-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            border-radius: 1.5rem;
+        }
+        .carousel-caption {
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            color: white;
+            width: 100%;
+        }
+        .carousel-caption h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .carousel-prev, .carousel-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(37,99,235,0.8);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.3s;
+        }
+        .carousel-prev:hover, .carousel-next:hover {
+            background: #fbbf24;
+            color: #0f172a;
+        }
+        .carousel-prev { left: 20px; }
+        .carousel-next { right: 20px; }
+        .carousel-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+        }
+        .dot.active {
+            background: #fbbf24;
+            transform: scale(1.3);
+        }
+        @media (max-width: 768px) {
+            .image-carousel-container { height: 250px; }
+            .carousel-caption h3 { font-size: 1rem; }
+            .carousel-caption p { font-size: 0.7rem; }
+        }
+
+        /* ========== ESTATÍSTICAS ========== */
+        .stats-section {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        .stat-item h2 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #fbbf24, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-item p {
+            color: #94a3b8;
+        }
+        @media (max-width: 640px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+            .stat-item h2 { font-size: 1.8rem; }
+        }
+
+        /* Títulos */
+        .section-title {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            font-weight: 600;
+            margin: 2rem 0 1.5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .section-title i {
+            color: #fbbf24;
+            background: rgba(37,99,235,0.3);
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+
+        /* Grade de serviços */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .service-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(15px);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: #fbbf24;
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3);
+        }
+        .service-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .service-image i {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            color: #fbbf24;
+            font-size: 2rem;
+            z-index: 2;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .service-content {
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .service-content h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: white;
+        }
+        .service-desc {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+            flex: 1;
+        }
+        .service-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .service-feature {
+            background: rgba(37,99,235,0.3);
+            color: #fbbf24;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .btn-budget {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            padding: 0.7rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            transition: 0.2s;
+            margin-top: auto;
+        }
+        .btn-budget:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(34,197,94,0.3);
+        }
+
+        /* Vídeo */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 1rem;
+            margin: 1rem 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .video-container iframe, .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 1rem;
+        }
+
+        /* Mapa */
+        .map-container {
+            background: rgba(255,255,255,0.05);
+            border-radius: 1.5rem;
+            padding: 1rem;
+            margin: 2rem 0;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 1rem;
+            z-index: 1;
+        }
+        .map-info {
+            margin-top: 1rem;
+            text-align: center;
+            color: #94a3b8;
+        }
+        .map-info i {
+            color: #fbbf24;
+            margin-right: 0.5rem;
+        }
+
+        /* Parceiros */
+        .partners-carousel {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+        .partners-slider {
+            display: flex;
+            animation: scrollPartners 20s linear infinite;
+            gap: 3rem;
+        }
+        @keyframes scrollPartners {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .partner-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 100px;
+        }
+        .partner-logo-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            filter: brightness(0.8);
+            transition: transform 0.3s;
+        }
+        .partner-logo-img:hover {
+            transform: scale(1.1);
+            filter: brightness(1);
+        }
+
+        /* Vantagens */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .benefit-item {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            padding: 1.8rem 1.5rem;
+            border-radius: 1.8rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .benefit-item:hover {
+            border-color: #fbbf24;
+            transform: translateY(-4px);
+        }
+        .benefit-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .benefit-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(37,99,235,0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #fbbf24;
+            transition: all 0.3s;
+        }
+        .benefit-item:hover .benefit-icon {
+            background: #fbbf24;
+            color: #0f172a;
+            transform: rotate(360deg);
+        }
+        .benefit-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+        .benefit-stats {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+
+        /* Aplicações */
+        .applications-carousel {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            margin: 2rem 0;
+            overflow: hidden;
+            border-radius: 2rem;
+        }
+        .applications-slider {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .application-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease;
+            display: flex;
+            align-items: flex-end;
+            padding: 2rem;
+        }
+        .application-slide.active {
+            opacity: 1;
+        }
+        .application-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+        }
+        .application-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+        }
+        .application-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .application-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        .application-tag {
+            background: rgba(37,99,235,0.8);
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+        .carousel-indicators {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 3;
+        }
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+        }
+        .indicator.active {
+            background: #fbbf24;
+        }
+
+        /* Contacto */
+        .contact-block {
+            background: rgba(15,23,42,0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 2.5rem;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(251,191,36,0.3);
+        }
+        .contact-highlight {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+        }
+        .contact-highlight i {
+            color: #fbbf24;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(20px);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 2rem;
+            padding: 2rem;
+            border: 1px solid #fbbf24;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .modal-header h2 {
+            color: white;
+        }
+        .modal-header h2 i {
+            color: #fbbf24;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+        .service-info {
+            background: rgba(37,99,235,0.2);
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .service-info h3 {
+            color: #fbbf24;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        .input-group {
+            position: relative;
+        }
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fbbf24;
+        }
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 1rem;
+            color: white;
+        }
+        .send-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .btn-send {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-send.whatsapp {
+            background: #25D366;
+            color: white;
+        }
+        .btn-send.email {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(5,15,40,0.95);
+            backdrop-filter: blur(10px);
+            color: #94a3b8;
+            padding: 3rem 5% 1.5rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(251,191,36,0.2);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem;
+        }
+        .footer-col p, .footer-col a {
+            color: #94a3b8;
+            text-decoration: none;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            display: block;
+        }
+        .footer-col a:hover {
+            color: #fbbf24;
+        }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        /* Botões flutuantes */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25D366;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            z-index: 100;
+            text-decoration: none;
+            transition: transform 0.3s;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
+        .top-arrow {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            background: #fbbf24;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0f172a;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 99;
+            transition: 0.2s;
+        }
+        .top-arrow:hover {
+            transform: translateY(-5px);
+            background: #f59e0b;
+        }
+
+        @media (max-width: 768px) {
+            .whatsapp-float { width: 50px; height: 50px; font-size: 1.5rem; bottom: 20px; right: 20px; }
+            .top-arrow { width: 40px; height: 40px; font-size: 1.2rem; bottom: 90px; right: 20px; }
+            .contact-block { flex-direction: column; text-align: center; gap: 0.8rem; }
+            .send-buttons { flex-direction: column; }
+            .footer-grid { text-align: center; gap: 1.5rem; }
+            .footer-bottom { flex-direction: column; text-align: center; gap: 0.5rem; }
+            .applications-carousel { height: 400px; }
+            .application-content h3 { font-size: 1.2rem; }
+            .benefit-header { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+    <div class="loader-content">
+        
+        <div class="loader-spinner"><img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="D.PEDRO SOLUÇÕES"></div>
+        <div class="loader-text">CARREGANDO...</div>
+    </div>
+</div>
+
+<!-- CURSOR LUMINOSO -->
+<div class="cursor-glow"></div>
+
+<!-- Top bar -->
+<div class="top-bar">
+    <div class="contact-info">
+        <span><i class="fas fa-phone-alt"></i> 946 299 834 | 959 777 301</span>
+        <span><i class="fas fa-map-marker-alt"></i> Luanda, Viana, Vila Flor</span>
+        <span><i class="fas fa-envelope"></i> dpedroservice@gmail.com</span>
+    </div>
+    <div class="social-links">
+        <a href="https://wa.me/244946299834" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="mailto:dpedroservice@gmail.com"><i class="fas fa-envelope"></i></a>
+        <a href="https://www.linkedin.com/in/daniel-pedro-bb03872b5/" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="https://www.instagram.com/dpedro_solucoes/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/search/top?q=dpedro%20solu%C3%A7%C3%B5es-lda" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="http://www.youtube.com/@DanielPedrosolucoes-kd4lq" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
+</div>
+
+<!-- Navegação -->
+<nav>
+    <div class="logo">
+        <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+            <img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="D.PEDRO SOLUÇÕES">
+            <div class="logo-text">D.PEDRO SOLUÇÕES <small>COMÉRCIO E PRESTAÇÃO DE SERVIÇOS</small></div>
+        </a>
+    </div>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <div class="nav-links" id="navLinks">
+        <a href="index.html" class="active">Início</a>
+        <a href="quem-somos.html">Quem somos</a>
+        <a href="mercados-verticais.html">Mercados Verticais</a>
+        <a href="solucoes.html">Soluções</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="recrutamento.html">Recrutamento</a>
+        <a href="contactos.html">Contactos</a>
+        <a href="curso.html">Curso</a>
+        <a href="projetos.html">Projetos</a>
+        <a href="gerenciamento.html">Gerenciamento</a>
+        <a href="Download.html" class="btn-app"><i class="fas fa-download"></i> App</a>
+        <a href="login.html" class="btn-app"><i class="fas fa-user"></i> Login</a>
+    </div>
+</nav>
+
+<main class="container">
+    <!-- Hero -->
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-badge"><i class="fas fa-certificate"></i> Especialistas em soluções integradas</div>
+            <h1>D.PEDRO SOLUÇÕES.LDA</h1>
+            <p>Comércio e prestação de serviços em segurança eletrónica, CFTV, controlo de acessos, deteção de incêndio, energia off grid, gráfica e muito mais.</p>
+            <p><strong><i class="fas fa-map-pin"></i> Sede:</strong> Luanda, Kilamba, Vila Flor, Luanda</p>
+            <button class="btn-primary" id="btnOrcamento"><i class="fas fa-calculator"></i> Pedir orçamento</button>
+        </div>
+        <div class="hero-visual">
+		
+            <img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="D.PEDRO SOLUÇÕES" class="hero-logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%232563eb\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'white\' font-size=\'40\' font-weight=\'bold\'%3EDssssP%3C/text%3E%3C/svg%3E'">
+        </div>
+    </div>
+
+    <!-- CARROSSEL DE 4 IMAGENS -->
+    <h2 class="section-title"><i class="fas fa-images"></i> Nossos Trabalhos</h2>
+    <div class="image-carousel-container">
+        <div class="image-carousel" id="imageCarousel">
+            <div class="carousel-slide active" style="background-image: url('https://i.ibb.co/yFxYKkjq/tecnico.png');">
+                <div class="carousel-caption"><h3>Instalação de CFTV</h3><p>Sistema de monitoramento 24/7</p></div>
+            </div>
+            <div class="carousel-slide" style="background-image: url('https://i.ibb.co/Kp80yKMc/controle-acesso.png');">
+                <div class="carousel-caption"><h3>Controlo de Acesso</h3><p>Biometria e catracas</p></div>
+            </div>
+            <div class="carousel-slide" style="background-image: url('https://i.ibb.co/pjRd83wc/energia.png');">
+                <div class="carousel-caption"><h3>Sistema Off Grid</h3><p>Energia solar para indústria</p></div>
+            </div>
+            <div class="carousel-slide" style="background-image: url('https://i.ibb.co/FLP81SfP/cerca-eletrica.png');">
+                <div class="carousel-caption"><h3>Cerca Elétrica</h3><p>Proteção perimetral residencial</p></div>
+            </div>
+        </div>
+        <button class="carousel-prev" onclick="mudarSlide(-1)"><i class="fas fa-chevron-left"></i></button>
+        <button class="carousel-next" onclick="mudarSlide(1)"><i class="fas fa-chevron-right"></i></button>
+        <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+
+    <!-- ESTATÍSTICAS ANIMADAS -->
+    <div class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item"><h2 class="counter" data-target="500">0</h2><p>Clientes Satisfeitos</p></div>
+            <div class="stat-item"><h2 class="counter" data-target="1200">0</h2><p>Instalações Realizadas</p></div>
+            <div class="stat-item"><h2 class="counter" data-target="10">0</h2><p>Anos de Experiência</p></div>
+            <div class="stat-item"><h2 class="counter" data-target="24">0</h2><p>Suporte 24/7</p></div>
+        </div>
+    </div>
+
+    <!-- Câmaras IP com vídeo -->
+    <!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reprodução Automática de Vídeos em Sequência</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .section-title {
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 560px;
+            margin: 20px 0;
+        }
+        iframe {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 560 / 315;
+        }
+    </style>
+</head>
+<body>
+
+<h2 class="section-title"><i class="fas fa-video"></i> Câmaras IP</h2>
+<div class="video-container">
+    <iframe 
+        id="meuVideo"
+        width="560" 
+        height="315" 
+        src="https://www.youtube.com/embed/IELmwLRqXnc?enablejsapi=1&autoplay=1&loop=1&playlist=IELmwLRqXnc" 
+        title="Demonstração de Câmaras IP - D.PEDRO SOLUÇÕES" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        referrerpolicy="strict-origin-when-cross-origin" 
+        allowfullscreen>
+    </iframe>
+</div>
+
+<script>
+    // Carrega a API do YouTube
+    let tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/playlist?list=PLoNGxNSRJneJ09uk7_ah8c_PsNXzCbs-e";
+    let firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    let player;
+    let videoAtual = 1;  // 1 = primeiro vídeo, 2 = segundo vídeo
+
+    // IDs dos vídeos (substitua pelo ID do segundo vídeo)
+    const video1 = "IELmwLRqXnc";
+    const video2 = "SEU_ID_DO_SEGUNDO_VIDEO";   // <--- MUDE AQUI
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('meuVideo', {
+            events: {
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    function onPlayerStateChange(event) {
+        // Quando o vídeo termina (estado = 0)
+        if (event.data === YT.PlayerState.ENDED) {
+            if (videoAtual === 1) {
+                // Terminou o primeiro vídeo -> trocar para o segundo
+                videoAtual = 2;
+                player.loadVideoById(video2);
+                player.playVideo();
+            } 
+            else if (videoAtual === 2) {
+                // Terminou o segundo vídeo -> voltar ao primeiro e repetir o ciclo
+                videoAtual = 1;
+                player.loadVideoById(video1);
+                player.playVideo();
+            }
+        }
+    }
+</script>
+</body>
+</html>
+    <p style="text-align: center; margin-bottom: 2rem; color:#94a3b8;">Demonstração de Sistema de Segurança - O vídeo inicia automaticamente e se repete em loop</p>
+
+    <!-- Grade de serviços -->
+    <h2 class="section-title"><i class="fas fa-cube"></i> Soluções disponíveis</h2>
+    <p style="margin-bottom: 0.5rem; color:#94a3b8;">Clique em "Peça orçamento" para solicitar um orçamento personalizado:</p>
+    <div class="services-grid" id="servicesGrid"></div>
+
+    <!-- MAPA LOCALIZAÇÃO -->
+    <h2 class="section-title"><i class="fas fa-map-marker-alt"></i> Nossa Localização</h2>
+    <div class="map-container">
+        <div id="map"></div>
+        <div class="map-info">
+            <p><i class="fas fa-building"></i> <strong>D.PEDRO SOLUÇÕES LDA</strong></p>
+            <p><i class="fas fa-location-dot"></i> Rua Direita da Engevia, Vila Flor, Kilamba, Luanda, Angola</p>
+            <p><i class="fas fa-phone"></i> 946 299 834 | 959 777 301</p>
+        </div>
+    </div>
+
+    <!-- Parceiros -->
+    <h2 class="section-title"><i class="fas fa-handshake"></i> Principais Parceiros</h2>
+    <div class="partners-carousel">
+        <div class="partners-slider" id="partnersSlider"></div>
+    </div>
+
+    <!-- Vantagens -->
+    <h2 class="section-title"><i class="fas fa-chart-line"></i> Vantagens integradas</h2>
+    <div class="benefits-grid" id="benefitsGrid"></div>
+
+    <!-- Aplicações práticas -->
+    <h2 class="section-title"><i class="fas fa-building"></i> Aplicações práticas</h2>
+    <div class="applications-carousel">
+        <div class="applications-slider" id="applicationsSlider"></div>
+        <div class="carousel-indicators" id="carouselIndicators"></div>
+    </div>
+
+    <!-- Contacto direto -->
+    <div class="contact-block">
+        <span class="contact-highlight"><i class="fas fa-phone-alt"></i> 946 299 834 / 959 777 301</span>
+        <span><i class="fas fa-envelope"></i> dpedroservice@gmail.com</span>
+        <span><i class="fas fa-globe"></i> www.dpedrosolucoes.shop</span>
+        <button class="btn-primary" style="padding:0.5rem 1.5rem; font-size:0.9rem;" onclick="abrirWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+    </div>
+</main>
+
+<!-- Modal de orçamento -->
+<div class="modal" id="budgetModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-calculator"></i> Pedir Orçamento</h2>
+            <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="service-info">
+            <h3 id="serviceName">Serviço</h3>
+            <p id="serviceDescription">Descrição do serviço</p>
+        </div>
+        <form id="budgetForm">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Nome completo *</label>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="nomeCliente" placeholder="Seu nome completo" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-phone"></i> Telefone *</label>
+                <div class="input-group">
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" id="telefoneCliente" placeholder="(244) 000-000-000" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="emailCliente" placeholder="seu@email.com">
+                </div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-comment"></i> Mensagem</label>
+                <div class="input-group">
+                    <i class="fas fa-comment"></i>
+                    <textarea id="mensagemCliente" rows="4" placeholder="Descreva suas necessidades..."></textarea>
+                </div>
+            </div>
+            <div class="send-buttons">
+                <button type="button" class="btn-send whatsapp" onclick="enviarWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                <button type="button" class="btn-send email" onclick="enviarEmail()"><i class="fas fa-envelope"></i> Email</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <strong>D.PEDRO SOLUÇÕES</strong>
+            <p>Comércio e Prestação de Serviços, Lda.</p>
+            <p>Luanda, Angola</p>
+            <p><i class="fas fa-map-pin"></i> Vila Flor, Kilamba</p>
+        </div>
+        <div class="footer-col">
+            <strong>Contactos</strong>
+            <p><i class="fas fa-phone"></i> +244 946 299 834</p>
+            <p><i class="fas fa-phone"></i> +244 959 777 301</p>
+            <p><i class="fas fa-envelope"></i> dpedroservice@gmail.com</p>
+        </div>
+        <div class="footer-col">
+            <strong>Horário</strong>
+            <p>Segunda - Sexta: 8h - 18h</p>
+            <p>Sábado: 8h - 13h</p>
+            <p>Suporte Técnico 24/7</p>
+        </div>
+        <div class="footer-col">
+            <strong>Links Rápidos</strong>
+            <a href="index.html">Início</a>
+            <a href="quem-somos.html">Quem somos</a>
+            <a href="solucoes.html">Soluções</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="contactos.html">Contactos</a>
+            <a href="curso.html">Cursos</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div>© 2026 D.PEDRO SOLUÇÕES – Todos os direitos reservados</div>
+        <div><i class="fas fa-heart" style="color:#fbbf24"></i> Tecnologia e Segurança</div>
+    </div>
+</footer>
+
+<!-- Botões flutuantes -->
+<a href="https://wa.me/244946299834" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<div class="top-arrow" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></div>
+
+<script>
+    // ========== TOASTR CONFIG ==========
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "4000",
+        "preventDuplicates": true
+    };
+
+    // ========== LOADER ==========
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            document.getElementById('loader').style.opacity = '0';
+            setTimeout(function() {
+                document.getElementById('loader').style.display = 'none';
+            }, 500);
+        }, 1000);
+    });
+
+    // ========== CURSOR LUMINOSO ==========
+    if (window.innerWidth > 768) {
+        const cursorGlow = document.querySelector('.cursor-glow');
+        document.addEventListener('mousemove', function(e) {
+            cursorGlow.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`;
+        });
+    }
+
+    // ========== CONTADOR ANIMADO ==========
+    function iniciarContadores() {
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            let current = 0;
+            const increment = target / 50;
+            const updateCounter = () => {
+                if (current < target) {
+                    current += increment;
+                    counter.innerText = Math.ceil(current);
+                    setTimeout(updateCounter, 30);
+                } else {
+                    counter.innerText = target + (target === 24 ? 'h' : '+');
+                }
+            };
+            updateCounter();
+        });
+    }
+
+    // ========== CARROSSEL DE IMAGENS ==========
+    let slideAtual = 0;
+    let intervaloCarrossel;
+    
+    function mudarSlide(direcao) {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
+        if (slides.length === 0) return;
+        slides[slideAtual].classList.remove('active');
+        if (dots.length) dots[slideAtual].classList.remove('active');
+        slideAtual = (slideAtual + direcao + slides.length) % slides.length;
+        slides[slideAtual].classList.add('active');
+        if (dots.length) dots[slideAtual].classList.add('active');
+        resetarIntervalo();
+    }
+
+    function iniciarCarrossel() {
+        if (intervaloCarrossel) clearInterval(intervaloCarrossel);
+        intervaloCarrossel = setInterval(() => mudarSlide(1), 4000);
+    }
+
+    function resetarIntervalo() {
+        clearInterval(intervaloCarrossel);
+        iniciarCarrossel();
+    }
+
+    function criarDots() {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dotsContainer = document.getElementById('carouselDots');
+        if (!dotsContainer || slides.length === 0) return;
+        dotsContainer.innerHTML = '';
+        slides.forEach((_, i) => {
+            const dot = document.createElement('span');
+            dot.className = `dot${i === 0 ? ' active' : ''}`;
+            dot.onclick = () => {
+                const slidesArr = document.querySelectorAll('.carousel-slide');
+                const dotsArr = document.querySelectorAll('.dot');
+                slidesArr[slideAtual].classList.remove('active');
+                dotsArr[slideAtual].classList.remove('active');
+                slideAtual = i;
+                slidesArr[slideAtual].classList.add('active');
+                dotsArr[slideAtual].classList.add('active');
+                resetarIntervalo();
+            };
+            dotsContainer.appendChild(dot);
+        });
+    }
+
+    // ========== MAPA ==========
+    function initMap() {
+        // Coordenadas da D.PEDRO SOLUÇÕES (Vila Flor, Kilamba, Luanda)
+        const dpedroLocation = [-8.9833, 13.2833]; // Aproximado - ajustar conforme local exato
+        
+        const map = L.map('map').setView(dpedroLocation, 15);
+        
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.google.com/maps/place/DPEDRO+SOLU%C3%87%C3%95ES+LDA/@-9.0156795,13.3487928,16z/data=!4m6!3m5!1s0x1a521d0033e53ed3:0xdac4e2069e1e0823!8m2!3d-9.0170535!4d13.3514244!16s%2Fg%2F11lttkfswm?authuser=0&entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D">OSM</a> & CartoDB',
+            subdomains: 'abcd',
+            maxZoom: 19,
+            minZoom: 3
+        }).addTo(map);
+        
+        // Ícone personalizado
+        const customIcon = L.divIcon({
+            html: '<div style="background:#fbbf24; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid white; box-shadow:0 0 15px #fbbf24;"><i class="fas fa-building" style="color:#0f172a; font-size:14px;"></i></div>',
+            iconSize: [30, 30],
+            popupAnchor: [0, -15]
+        });
+        
+        const marker = L.marker(dpedroLocation, { icon: customIcon }).addTo(map);
+        marker.bindPopup(`
+            <strong>D.PEDRO SOLUÇÕES LDA</strong><br>
+            Rua Direita da Engevia, Vila Flor<br>
+            Kilamba, Luanda, Angola<br>
+            📞 946 299 834 | 959 777 301
+        `).openPopup();
+        
+        // Adicionar círculo de raio
+        L.circle(dpedroLocation, {
+            color: '#fbbf24',
+            fillColor: '#fbbf24',
+            fillOpacity: 0.1,
+            radius: 500
+        }).addTo(map);
+    }
+
+    // ========== DADOS ==========
+    // 20+ SERVIÇOS
+    // Lista de serviços com imagens e informações detalhadas
+    const servicos = [
+    { 
+        icone: 'fa-video', 
+        nome: 'Câmaras CFTV', 
+        descricao: 'Sistemas de videovigilância com tecnologia IP e analógica para monitoramento 24/7.',
+        features: ['4K', 'Visão noturna', 'IA', 'PoE'],
+        imagem: 'https://i.ibb.co/FLs7FFRx/cftv.png'
+    },
+    { 
+        icone: 'fa-bell', 
+        nome: 'Alarmes intrusão', 
+        descricao: 'Sistemas de alarme com deteção perimetral, sensores de abertura e movimento.',
+        features: ['Wireless', 'APP', 'GSM'],
+        imagem: 'https://i.ibb.co/tPhxpKFD/central-alarme.png'
+    },
+    { 
+        icone: 'fa-walking', 
+        nome: 'Sensores presença', 
+        descricao: 'Sensores de movimento com tecnologia PIR e micro-ondas para ambientes internos e externos.',
+        features: ['12m', 'Anti-mascara', 'Pet friendly'],
+        imagem: 'https://i.ibb.co/vCgbxVr9/sensor-pir.png'
+    },
+    { 
+        icone: 'fa-fingerprint', 
+        nome: 'Controlo acesso', 
+        descricao: 'Soluções biométricas, RFID e cartão de proximidade para gestão de entradas.',
+        features: ['Biometria', 'RFID', 'Facial'],
+        imagem: 'https://i.ibb.co/fzstMFqM/biometrico.jpg'
+    },
+    { 
+        icone: 'fa-phone-alt', 
+        nome: 'Vídeo-porteiros', 
+        descricao: 'Sistemas de comunicação com vídeo e abertura remota para condomínios.',
+        features: ['7"', 'APP', 'IP67'],
+        imagem: 'https://i.ibb.co/xSKRh3ft/video-porteiro.png'
+    },
+    { 
+        icone: 'fa-fire-extinguisher', 
+        nome: 'Detecção incêndio', 
+        descricao: 'Centrais de incêndio, detetores de fumo, temperatura e CO.',
+        features: ['Fumo', 'Calor', 'CO'],
+        imagem: 'https://i.ibb.co/FLs7FFRx/cftv.png'
+    },
+    { 
+        icone: 'fa-bolt', 
+        nome: 'Cerca elétrica', 
+        descricao: 'Cercas elétricas de alta tensão com sensores de corte e alarme.',
+        features: ['10kV', 'Sensor', 'Perimetral'],
+        imagem: 'https://i.ibb.co/FLs7FFRx/cftv.png'
+    },
+    { 
+        icone: 'fa-shield-alt', 
+        nome: 'Proteção perimetral', 
+        descricao: 'Barreiras de infravermelhos, sensores de vibração e concertina.',
+        features: ['IV', 'Vibração', 'Concertina'],
+        imagem: 'https://i.ibb.co/TBFvYWPR/seguranca.jpg'
+    },
+    { 
+        icone: 'fa-wind', 
+        nome: 'Detecção gases', 
+        descricao: 'Sensores para deteção de GLP, GN, CO e outros gases tóxicos.',
+        features: ['GLP', 'GN', 'CO'],
+        imagem: 'https://i.ibb.co/FLs7FFRx/cftv.png'
+    },
+    { 
+        icone: 'fa-hdd', 
+        nome: 'Gravadores digitais', 
+        descricao: 'DVR e NVR com suporte para múltiplas câmaras e análise inteligente.',
+        features: ['16 canais', '4K', 'H.265'],
+        imagem: 'https://i.ibb.co/j9DSLVHR/nvr-32.jpg'
+    },
+    { 
+        icone: 'fa-satellite-dish', 
+        nome: 'Monitoramento remoto', 
+        descricao: 'Acesso remoto via aplicativo para visualização de câmaras e receção de alertas.',
+        features: ['APP', 'Alertas', 'Cloud'],
+        imagem: 'https://i.ibb.co/FLs7FFRx/cftv.png'
+    },
+    { 
+        icone: 'fa-image', 
+        nome: 'Gestão imagens VMS', 
+        descricao: 'Software de gestão de vídeo com análise inteligente e integração.',
+        features: ['VMS', 'IA', 'Relatórios'],
+        imagem: 'https://i.ibb.co/FLs7FFRx/cftv.png'
+    },
+    { 
+        icone: 'fa-satellite', 
+        nome: 'Antena parabólica', 
+        descricao: 'Instalação e alinhamento de antenas para TV e internet rural.',
+        features: ['TV', 'Internet', 'Alinhamento'],
+        imagem: 'https://i.ibb.co/FLs7FFRx/cftv.png'
+    },
+    { 
+        icone: 'fa-solar-panel', 
+        nome: 'Sistema Off Grid', 
+        descricao: 'Painéis solares, inversores e baterias para independência energética.',
+        features: ['Solar', 'Inversor', 'Bateria'],
+        imagem: 'https://i.ibb.co/pjRd83wc/energia.png'
+    },
+    { 
+        icone: 'fa-print', 
+        nome: 'Gráfica & Brindes', 
+        descricao: 'Impressão offset/digital, cartões, flyers, faixas e brindes personalizados.',
+        features: ['Offset', 'Digital', 'Brindes'],
+        imagem: 'https://i.ibb.co/xKQYt5Nv/offset.png'
+    },
+    { 
+        icone: 'fa-map-pin', 
+        nome: 'GPS Moto/Carro', 
+        descricao: 'Rastreadores veiculares com corte de motor e cerca eletrónica.',
+        features: ['Corte', 'Cerca', 'APP'],
+        imagem: 'https://i.ibb.co/FLs7FFRx/cftv.png'
+    },
+    { 
+        icone: 'fa-microchip', 
+        nome: 'Hardware/Software', 
+        descricao: 'Venda de equipamentos e desenvolvimento de software personalizado.',
+        features: ['Hardware', 'Software', 'Sistemas'],
+        imagem: 'https://i.ibb.co/hFbxKVPx/seguranca.png'
+    },
+    { 
+        icone: 'fa-shield-virus', 
+        nome: 'Biossegurança', 
+        descricao: 'Equipamentos de proteção e controlo de acesso sanitário.',
+        features: ['EPI', 'Controlo', 'Higiene'],
+        imagem: 'https://i.ibb.co/FLs7FFRx/cftv.png'
+    },
+    { 
+        icone: 'fa-lock', 
+        nome: 'Cofres alta segurança', 
+        descricao: 'Cofres à prova de fogo e arrombamento com fechadura biométrica.',
+        features: ['Fogo', 'Biometria', 'Digital'],
+        imagem: 'https://i.ibb.co/xt9d65BC/fechadura-biometrica.png'
+    },
+    { 
+        icone: 'fa-pen-fancy', 
+        nome: 'Design gráfico', 
+        descricao: 'Criação de logotipos, identidade visual e materiais promocionais.',
+        features: ['Logotipo', 'Branding', 'Editorial'],
+        imagem: 'https://i.ibb.co/0RcSnHnv/impressora.png'
+    },
+    { 
+        icone: 'fa-pen-fancy', 
+        nome: 'Desenvolvimento Website', 
+        descricao: 'Criação de sites, lojas virtuais e aplicações web sob medida.',
+        features: ['Web', 'E-commerce', 'Responsivo'],
+        imagem: 'https://i.ibb.co/FLs7FFRx/cftv.png'
+    }
+];
+
+    const vantagens = [
+        { icone: 'fa-users', titulo: 'Contagem de Pessoas', descricao: 'Sistema avançado de contagem e análise de fluxo de pessoas em tempo real.', features: ['Precisão 98%', 'Multi-direcional'], stats: [{ valor: '98%', label: 'Precisão' }] },
+        { icone: 'fa-robot', titulo: 'Reconhecimento IA', descricao: 'Tecnologia de inteligência artificial para reconhecimento facial e comportamentos suspeitos.', features: ['Facial', 'Placas'], stats: [{ valor: '99%', label: 'Precisão' }] },
+        { icone: 'fa-shield-alt', titulo: 'Segurança 24/7', descricao: 'Monitoramento contínuo com equipamentos redundantes e central de monitoramento.', features: ['Redundância', 'Backup'], stats: [{ valor: '24h', label: 'Cobertura' }] },
+        { icone: 'fa-bell', titulo: 'Alertas Automáticos', descricao: 'Notificações automáticas via SMS, WhatsApp, email para eventos críticos.', features: ['SMS', 'WhatsApp'], stats: [{ valor: '3s', label: 'Entrega' }] }
+    ];
+
+    const parceiros = [
+        { nome: 'HIKVISION', logo: 'https://i.ibb.co/mV6V3cJ2/hikvision.png', fallback: 'HIK' },
+        { nome: 'Dahua', logo: 'https://i.ibb.co/bRLnhWRq/dahua.png', fallback: 'DAH' },
+        { nome: 'Bosch', logo: 'https://i.ibb.co/gZPgLGH8/bosch.png', fallback: 'BOS' },
+        { nome: 'Samsung', logo: 'https://i.ibb.co/6Jnyc9ww/samsung.png', fallback: 'SAM' },
+        { nome: 'Axis', logo: 'https://i.ibb.co/wh2Sv6qc/axis.jpg', fallback: 'AXI' },
+        { nome: 'Huawei', logo: 'https://i.ibb.co/wFF0YYh9/huawei.jpg', fallback: 'HUA' },
+        { nome: 'Microsoft', logo: 'https://i.ibb.co/hFyJzKd1/Microsoft-Windows-Logo-wine.png', fallback: 'MS' },
+        { nome: 'Apple', logo: 'https://i.ibb.co/n88wW9Wf/apple.png', fallback: 'APL' },
+        { nome: 'hplife', logo: 'https://i.ibb.co/357LFRMT/hplife.png', fallback: 'INT' },
+        { nome: 'TP-Link', logo: 'https://i.ibb.co/rKKP6FWD/winetech.png', fallback: 'TPL' }
+    ];
+
+    const aplicacoes = [
+    { titulo: 'Infraestruturas Críticas', descricao: 'Soluções de alta segurança para aeroportos, portos, barragens e centrais elétricas.', tags: ['CFTV', 'Perimetral', 'Biometria'], imagem: 'https://i.ibb.co/yFxYKkjq/tecnico.png' },
+    { titulo: 'Condomínios', descricao: 'Segurança residencial completa com controle de acesso, câmaras e porteiros eletrónicos.', tags: ['Portaria', 'Acesso', 'CFTV'], imagem: 'https://i.ibb.co/9kWxfbHw/condominios.jpg' },
+    { titulo: 'Indústria', descricao: 'Monitoramento de produção, controle de acesso de funcionários e segurança patrimonial.', tags: ['Produção', 'Acesso', 'PTZ'], imagem: 'https://i.ibb.co/0yxkC7Pg/industria.jpg' },
+    { titulo: 'Comércio', descricao: 'Proteção contra furtos, gestão de clientes, contagem de pessoas e monitoramento de lojas.', tags: ['Anti-furto', 'PDV', 'CFTV'], imagem: 'https://i.ibb.co/RGpjFS2t/comercio.png' },
+    { titulo: 'Energia Off Grid', descricao: 'Sistemas solares e eólicos para locais remotos sem acesso à rede elétrica.', tags: ['Solar', 'Eólico', 'Baterias'], imagem: 'https://i.ibb.co/YTZ6vhH7/energia.png' }
+];
+
+    // Popular serviços
+    function popularServicos() {
+        const grid = document.getElementById('servicesGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        servicos.forEach(s => {
+            const card = document.createElement('div');
+            card.className = 'service-card';
+            card.innerHTML = `
+                <div class="service-image" style="background: linear-gradient(135deg, #1e3a8a, #2563eb); background-size: cover; background-image: url('${s.imagem}');"><i class="fas ${s.icone}"></i></div>
+                <div class="service-content">
+                    <h3>${s.nome}</h3>
+                    <div class="service-desc">${s.descricao}</div>
+                    <div class="service-features">${s.features.map(f => `<span class="service-feature">${f}</span>`).join('')}</div>
+                    <button class="btn-budget" onclick="abrirModal('${s.nome}', '${s.descricao.replace(/'/g, "\\'")}')"><i class="fas fa-calculator"></i> Peça orçamento</button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // Popular vantagens
+    function popularVantagens() {
+        const grid = document.getElementById('benefitsGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        vantagens.forEach(v => {
+            const item = document.createElement('div');
+            item.className = 'benefit-item';
+            item.onclick = () => {
+                Swal.fire({ title: v.titulo, text: v.descricao, icon: 'info', background: '#0f172a', color: 'white', confirmButtonColor: '#fbbf24' });
+            };
+            item.innerHTML = `
+                <div class="benefit-header">
+                    <div class="benefit-icon"><i class="fas ${v.icone}"></i></div>
+                    <h3 class="benefit-title">${v.titulo}</h3>
+                </div>
+                <p>${v.descricao}</p>
+                <div class="benefit-stats">${v.stats.map(s => `<div class="stat"><div class="stat-value">${s.valor}</div><div>${s.label}</div></div>`).join('')}</div>
+                <div>${v.features.map(f => `<span style="background:rgba(37,99,235,0.3); padding:0.2rem 0.6rem; border-radius:40px; font-size:0.7rem; margin-right:0.3rem; color:#fbbf24;">${f}</span>`).join('')}</div>
+            `;
+            grid.appendChild(item);
+        });
+    }
+
+    // Popular parceiros
+    function popularParceiros() {
+        const slider = document.getElementById('partnersSlider');
+        if (!slider) return;
+        slider.innerHTML = '';
+        const parceirosDuplicados = [...parceiros, ...parceiros];
+        parceirosDuplicados.forEach(p => {
+            const item = document.createElement('div');
+            item.className = 'partner-item';
+            item.innerHTML = `<img class="partner-logo-img" src="${p.logo}" alt="${p.nome}" onerror="this.src='https://placehold.co/60x60/2563eb/white?text=${p.fallback}'"><span style="color:#94a3b8; margin-top:5px; font-size:0.7rem;">${p.nome}</span>`;
+            slider.appendChild(item);
+        });
+    }
+
+    // Popular aplicações
+    function popularAplicacoes() {
+        const slider = document.getElementById('applicationsSlider');
+        const indicators = document.getElementById('carouselIndicators');
+        if (!slider || !indicators) return;
+        slider.innerHTML = '';
+        indicators.innerHTML = '';
+        aplicacoes.forEach((app, i) => {
+            const slide = document.createElement('div');
+            slide.className = `application-slide${i === 0 ? ' active' : ''}`;
+            slide.style.backgroundImage = `url('${app.imagem}')`;
+            slide.style.backgroundSize = 'cover';
+            slide.innerHTML = `<div class="application-content"><h3>${app.titulo}</h3><p>${app.descricao}</p><div class="application-tags">${app.tags.map(t => `<span class="application-tag">${t}</span>`).join('')}</div></div>`;
+            slider.appendChild(slide);
+            
+            const ind = document.createElement('span');
+            ind.className = `indicator${i === 0 ? ' active' : ''}`;
+            ind.onclick = () => {
+                const slides = document.querySelectorAll('.application-slide');
+                const inds = document.querySelectorAll('.indicator');
+                slides.forEach(s => s.classList.remove('active'));
+                inds.forEach(ind => ind.classList.remove('active'));
+                slides[i].classList.add('active');
+                ind.classList.add('active');
+            };
+            indicators.appendChild(ind);
+        });
+        let current = 0;
+        setInterval(() => {
+            const slides = document.querySelectorAll('.application-slide');
+            const inds = document.querySelectorAll('.indicator');
+            if (slides.length === 0) return;
+            slides[current].classList.remove('active');
+            inds[current].classList.remove('active');
+            current = (current + 1) % slides.length;
+            slides[current].classList.add('active');
+            inds[current].classList.add('active');
+        }, 4000);
+    }
+
+    // ========== MODAL ==========
+    let servicoSelecionado = null;
+
+    function abrirModal(nome, desc) {
+        servicoSelecionado = { nome, desc };
+        document.getElementById('serviceName').innerHTML = `<strong>${nome}</strong>`;
+        document.getElementById('serviceDescription').innerHTML = desc;
+        document.getElementById('budgetModal').classList.add('active');
+    }
+
+    function fecharModal() {
+        document.getElementById('budgetModal').classList.remove('active');
+        document.getElementById('nomeCliente').value = '';
+        document.getElementById('telefoneCliente').value = '';
+        document.getElementById('emailCliente').value = '';
+        document.getElementById('mensagemCliente').value = '';
+    }
+
+    function enviarWhatsApp() {
+        const nome = document.getElementById('nomeCliente').value;
+        const tel = document.getElementById('telefoneCliente').value;
+        if (!nome || !tel) {
+            toastr.error('Preencha nome e telefone!');
+            return;
+        }
+        const msg = `*ORÇAMENTO D.PEDRO*\nServiço: ${servicoSelecionado?.nome}\nCliente: ${nome}\nTel: ${tel}\nEmail: ${document.getElementById('emailCliente').value}\nMensagem: ${document.getElementById('mensagemCliente').value}`;
+        window.open(`https://wa.me/244946299834?text=${encodeURIComponent(msg)}`, '_blank');
+        toastr.success('Redirecionando para WhatsApp!');
+        fecharModal();
+    }
+
+    function enviarEmail() {
+        const nome = document.getElementById('nomeCliente').value;
+        const tel = document.getElementById('telefoneCliente').value;
+        if (!nome || !tel) {
+            toastr.error('Preencha nome e telefone!');
+            return;
+        }
+        const subject = `Orçamento - ${servicoSelecionado?.nome}`;
+        const body = `Nome: ${nome}\nTelefone: ${tel}\nEmail: ${document.getElementById('emailCliente').value}\nMensagem: ${document.getElementById('mensagemCliente').value}`;
+        window.location.href = `mailto:dpedroservice@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        toastr.success('Abrindo cliente de email!');
+        fecharModal();
+    }
+
+    function abrirWhatsApp() {
+        window.open('https://wa.me/244946299834?text=Olá! Gostaria de solicitar um orçamento.', '_blank');
+    }
+
+    // ========== MENU MOBILE ==========
+    function toggleMenu() {
+        document.getElementById('navLinks').classList.toggle('active');
+    }
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 900) {
+                document.getElementById('navLinks').classList.remove('active');
+            }
+        });
+    });
+
+    // ========== EVENTOS ==========
+    document.getElementById('btnOrcamento').onclick = () => {
+        servicoSelecionado = { nome: 'Orçamento Geral', desc: 'Solicitação personalizada' };
+        document.getElementById('serviceName').innerHTML = '<strong>Orçamento Geral</strong>';
+        document.getElementById('serviceDescription').innerHTML = 'Solicitação personalizada';
+        document.getElementById('budgetModal').classList.add('active');
+    };
+    
+    window.onclick = (e) => { if (e.target === document.getElementById('budgetModal')) fecharModal(); };
+
+    // ALERTA DE PROMOÇÃO
+    setTimeout(() => {
+        Swal.fire({
+            title: '🎉 Promoção Especial!',
+            text: '15% de desconto em sistemas CCTV este mês!',
+            icon: 'info',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24',
+            confirmButtonText: 'Quero aproveitar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                abrirModal('CCTV - Promoção', 'Sistema de CFTV com 15% de desconto');
+            }
+        });
+    }, 5000);
+
+    // ========== INICIALIZAÇÃO ==========
+    document.addEventListener('DOMContentLoaded', function() {
+        popularServicos();
+        popularVantagens();
+        popularParceiros();
+        popularAplicacoes();
+        criarDots();
+        iniciarCarrossel();
+        initMap();
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    iniciarContadores();
+                    observer.disconnect();
+                }
+            });
+        });
+        const statsSection = document.querySelector('.stats-section');
+        if (statsSection) observer.observe(statsSection);
+    });
+
+    // Expor funções globalmente
+    window.mudarSlide = mudarSlide;
+    window.abrirModal = abrirModal;
+    window.fecharModal = fecharModal;
+    window.enviarWhatsApp = enviarWhatsApp;
+    window.enviarEmail = enviarEmail;
+    window.abrirWhatsApp = abrirWhatsApp;
+    window.toggleMenu = toggleMenu;
+</script>
+
+</body>
+</html>

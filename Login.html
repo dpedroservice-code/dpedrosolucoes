@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Login | Área do Cliente - D.PEDRO SOLUÇÕES</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Acesso à área do cliente e gestão de serviços D.PEDRO SOLUÇÕES. Acompanhe seus projetos, solicite suporte e gerencie seus sistemas.">
+    <meta name="keywords" content="login D.PEDRO, área cliente, gestão de projetos, suporte técnico">
+    <meta name="author" content="D.PEDRO SOLUÇÕES">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://i.ibb.co/fVJjMXtL/logo1.png" type="image/x-icon">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/hFnw5Br7/logo.jpg">
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #2563eb15, transparent 30%),
+                        radial-gradient(circle at bottom right, #fbbf2415, transparent 30%),
+                        #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(37,99,235,0.3);
+            border-top-color: #fbbf24;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(251,191,36,0.3);
+        }
+        .top-bar .contact-info { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+        .top-bar .contact-info i { color: #fbbf24; }
+        .social-links a { color: #cbd5e1; margin-left: 1rem; transition: 0.2s; }
+        .social-links a:hover { color: #fbbf24; transform: translateY(-2px); }
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; text-align: center; gap: 0.5rem; }
+            .top-bar .contact-info { justify-content: center; }
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { display: flex; align-items: center; gap: 0.75rem; }
+        .logo img { height: 55px; transition: 0.3s; }
+        .logo-text { font-weight: 700; font-size: 1.2rem; color: white; line-height: 1.2; }
+        .logo-text small { display: block; font-size: 0.55rem; color: #94a3b8; }
+        .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+        .nav-links a, .nav-links button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-weight: 500;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .nav-links a:hover, .nav-links a.active { background: rgba(37,99,235,0.3); color: #fbbf24; }
+        .btn-app { background: linear-gradient(135deg, #22c55e, #16a34a) !important; color: white !important; }
+        .menu-toggle { display: none; cursor: pointer; font-size: 1.5rem; background: none; border: none; color: white; }
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(15,23,42,0.98);
+                backdrop-filter: blur(15px);
+                padding: 1.5rem;
+                gap: 0.8rem;
+                z-index: 99;
+                border-bottom: 1px solid rgba(251,191,36,0.3);
+            }
+            .nav-links.active { display: flex; }
+            .menu-toggle { display: block; }
+        }
+
+        /* Login Container */
+        .login-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+        .login-card {
+            background: rgba(15,23,42,0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 2rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(251,191,36,0.3);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-header img {
+            width: 80px;
+            margin-bottom: 1rem;
+        }
+        .login-header h2 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #ffffff, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .login-header p {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fbbf24;
+            font-size: 1rem;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 0.9rem 1rem 0.9rem 2.8rem;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 1rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #fbbf24;
+            background: rgba(255,255,255,0.12);
+        }
+        .input-group input::placeholder {
+            color: #64748b;
+        }
+        .options-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.8rem;
+            font-size: 0.85rem;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            color: #cbd5e1;
+        }
+        .checkbox-label input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #fbbf24;
+        }
+        .forgot-link {
+            color: #fbbf24;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 1.5rem;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(34,197,94,0.3);
+        }
+        .register-link {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        .register-link a {
+            color: #fbbf24;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .divider span {
+            margin: 0 1rem;
+        }
+        .social-login {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .social-btn {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 0.7rem;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #cbd5e1;
+        }
+        .social-btn:hover {
+            background: rgba(251,191,36,0.2);
+            border-color: #fbbf24;
+            color: #fbbf24;
+        }
+        .social-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(5,15,40,0.95);
+            backdrop-filter: blur(10px);
+            color: #94a3b8;
+            padding: 1.5rem 5%;
+            text-align: center;
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(251,191,36,0.2);
+        }
+
+        /* Modal Recuperação */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: rgba(15,23,42,0.98);
+            backdrop-filter: blur(20px);
+            width: 90%;
+            max-width: 450px;
+            border-radius: 2rem;
+            padding: 2rem;
+            border: 1px solid #fbbf24;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .modal-header h3 { color: white; }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+        .btn-submit {
+            background: #fbbf24;
+            color: #0f172a;
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 480px) {
+            .login-card { padding: 1.8rem; }
+            .options-row { flex-direction: column; gap: 0.8rem; align-items: flex-start; }
+        }
+
+        /* Cursor glow */
+        @media (min-width: 769px) {
+            .cursor-glow {
+                position: fixed;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: #2563eb;
+                pointer-events: none;
+                filter: blur(15px);
+                z-index: 9999;
+                transition: transform 0.1s ease;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loader"><div class="loader-spinner"></div></div>
+<div class="cursor-glow"></div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="contact-info">
+        <span><i class="fas fa-phone-alt"></i> 946 299 834 | 959 777 301</span>
+        <span><i class="fas fa-map-marker-alt"></i> Luanda, Viana, Vila Flor</span>
+        <span><i class="fas fa-envelope"></i> dpedroservice@gmail.com</span>
+    </div>
+    <div class="social-links">
+        <a href="https://wa.me/244946299834" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="mailto:dpedroservice@gmail.com"><i class="fas fa-envelope"></i></a>
+        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav>
+    <div class="logo">
+        <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+            <img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="D.PEDRO SOLUÇÕES">
+            <div class="logo-text">D.PEDRO SOLUÇÕES <small>COMÉRCIO E PRESTAÇÃO DE SERVIÇOS</small></div>
+        </a>
+    </div>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <div class="nav-links" id="navLinks">
+        <a href="index.html">Início</a>
+        <a href="quem-somos.html">Quem somos</a>
+        <a href="mercados-verticais.html">Mercados Verticais</a>
+        <a href="solucoes.html">Soluções</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="recrutamento.html">Recrutamento</a>
+        <a href="contactos.html">Contactos</a>
+        <a href="curso.html">Curso</a>
+        <a href="projetos.html">Projetos</a>
+        <a href="gerenciamento.html">Gerenciamento</a>
+        <a href="donload.html" class="btn-app"><i class="fas fa-download"></i> App</a>
+        <a href="login.html" class="active btn-app"><i class="fas fa-user"></i> Login</a>
+    </div>
+</nav>
+
+<!-- Login Section -->
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="D.PEDRO SOLUÇÕES" style="width: 70px;">
+            <h2><i class="fas fa-lock"></i> Área do Cliente</h2>
+            <p>Acesse sua conta para gerenciar seus serviços e projetos</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="emailLogin" placeholder="E-mail ou usuário" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="passwordLogin" placeholder="Palavra-passe" required>
+            </div>
+            <div class="options-row">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="rememberCheck"> Lembrar-me
+                </label>
+                <a href="#" class="forgot-link" id="forgotPasswordBtn">Esqueceu a palavra-passe?</a>
+            </div>
+            <button type="button" class="btn-login" id="btnLogin"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+        </form>
+        
+        <div class="divider"><span>ou</span></div>
+        
+        <div class="social-login">
+            <button class="social-btn" onclick="socialLogin('google')"><i class="fab fa-google"></i> Google</button>
+            <button class="social-btn" onclick="socialLogin('whatsapp')"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+        </div>
+        
+        <div class="register-link">
+            Não tem conta? <a href="#" id="registerBtn">Criar conta gratuita</a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Recuperação de Senha -->
+<div class="modal" id="recoveryModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-key"></i> Recuperar palavra-passe</h3>
+            <button class="modal-close" onclick="fecharRecoveryModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <p style="margin-bottom: 1rem; color:#94a3b8;">Digite seu e-mail cadastrado. Enviaremos um link para redefinir sua senha.</p>
+        <div class="input-group" style="margin-bottom: 1rem;">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="recoveryEmail" placeholder="Seu e-mail cadastrado">
+        </div>
+        <button class="btn-submit" onclick="enviarRecuperacao()"><i class="fas fa-paper-plane"></i> Enviar link</button>
+    </div>
+</div>
+
+<!-- Modal Registro Simplificado -->
+<div class="modal" id="registerModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-plus"></i> Criar nova conta</h3>
+            <button class="modal-close" onclick="fecharRegisterModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="input-group" style="margin-bottom: 1rem;">
+            <i class="fas fa-user"></i>
+            <input type="text" id="regNome" placeholder="Nome completo">
+        </div>
+        <div class="input-group" style="margin-bottom: 1rem;">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="regEmail" placeholder="E-mail">
+        </div>
+        <div class="input-group" style="margin-bottom: 1rem;">
+            <i class="fas fa-phone"></i>
+            <input type="tel" id="regTelefone" placeholder="Telefone (WhatsApp)">
+        </div>
+        <div class="input-group" style="margin-bottom: 1rem;">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="regPassword" placeholder="Palavra-passe">
+        </div>
+        <button class="btn-submit" onclick="registrarCliente()"><i class="fab fa-whatsapp"></i> Registrar via WhatsApp</button>
+    </div>
+</div>
+
+<footer>
+    <div>© 2026 D.PEDRO SOLUÇÕES – Todos os direitos reservados | Área do Cliente</div>
+</footer>
+
+<script>
+    // Loader
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        }, 800);
+    });
+
+    // Cursor glow
+    if (window.innerWidth > 768) {
+        const glow = document.querySelector('.cursor-glow');
+        document.addEventListener('mousemove', (e) => glow.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`);
+    }
+
+    function toggleMenu() { document.getElementById('navLinks').classList.toggle('active'); }
+    document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) document.getElementById('navLinks').classList.remove('active');
+    }));
+
+    // Credenciais de demonstração
+    const DEMO_CREDENTIALS = {
+        email: "cliente@dpedrosolucoes.ao",
+        password: "dpedro2026"
+    };
+
+    // Função de login
+    function realizarLogin() {
+        const email = document.getElementById('emailLogin').value.trim();
+        const password = document.getElementById('passwordLogin').value;
+        const remember = document.getElementById('rememberCheck').checked;
+
+        if (!email || !password) {
+            toastr.error('Preencha e-mail e palavra-passe');
+            return;
+        }
+
+        // Simulação de autenticação (para demonstração)
+        if (email === DEMO_CREDENTIALS.email && password === DEMO_CREDENTIALS.password) {
+            if (remember) {
+                localStorage.setItem('userLogged', 'true');
+                localStorage.setItem('userEmail', email);
+            }
+            toastr.success('Login realizado com sucesso! Redirecionando...');
+            setTimeout(() => {
+                Swal.fire({
+                    title: 'Bem-vindo!',
+                    text: 'Acesso concedido à área do cliente. Em breve terá acesso ao painel completo.',
+                    icon: 'success',
+                    background: '#0f172a',
+                    color: 'white',
+                    confirmButtonColor: '#fbbf24'
+                }).then(() => {
+                    window.location.href = 'gerenciamento.html';
+                });
+            }, 1000);
+        } else {
+            toastr.error('E-mail ou palavra-passe incorretos');
+            Swal.fire({
+                title: 'Acesso negado',
+                text: 'Credenciais inválidas. Utilize cliente@dpedrosolucoes.ao / dpedro2026 para teste.',
+                icon: 'error',
+                background: '#0f172a',
+                color: 'white',
+                confirmButtonColor: '#fbbf24'
+            });
+        }
+    }
+
+    // Recuperação de senha
+    function abrirRecoveryModal() {
+        document.getElementById('recoveryModal').classList.add('active');
+    }
+    function fecharRecoveryModal() {
+        document.getElementById('recoveryModal').classList.remove('active');
+    }
+    function enviarRecuperacao() {
+        const email = document.getElementById('recoveryEmail').value.trim();
+        if (!email) {
+            toastr.error('Digite seu e-mail');
+            return;
+        }
+        toastr.success(`Link de recuperação enviado para ${email}`);
+        fecharRecoveryModal();
+        Swal.fire({
+            title: 'Verifique seu e-mail',
+            text: 'Enviamos instruções para redefinir sua palavra-passe.',
+            icon: 'info',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24'
+        });
+    }
+
+    // Registro
+    let registerModal = null;
+    function abrirRegisterModal() {
+        document.getElementById('registerModal').classList.add('active');
+    }
+    function fecharRegisterModal() {
+        document.getElementById('registerModal').classList.remove('active');
+        document.getElementById('regNome').value = '';
+        document.getElementById('regEmail').value = '';
+        document.getElementById('regTelefone').value = '';
+        document.getElementById('regPassword').value = '';
+    }
+    function registrarCliente() {
+        const nome = document.getElementById('regNome').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const telefone = document.getElementById('regTelefone').value.trim();
+        const senha = document.getElementById('regPassword').value;
+
+        if (!nome || !email || !telefone || !senha) {
+            toastr.error('Preencha todos os campos');
+            return;
+        }
+        const msg = `*NOVO REGISTRO - D.PEDRO CLIENTE*%0A%0A*Nome:* ${nome}%0A*E-mail:* ${email}%0A*Telefone:* ${telefone}%0A*Senha:* ${senha}%0A%0A(Enviado via formulário de registro)`;
+        window.open(`https://wa.me/244946299834?text=${encodeURIComponent(msg)}`, '_blank');
+        toastr.success('Registro enviado! Em breve receberá confirmação.');
+        fecharRegisterModal();
+        Swal.fire({
+            title: 'Conta solicitada!',
+            text: 'Nossa equipa entrará em contacto para ativar seu acesso.',
+            icon: 'success',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24'
+        });
+    }
+
+    // Social login simulado
+    function socialLogin(provider) {
+        Swal.fire({
+            title: `${provider.charAt(0).toUpperCase() + provider.slice(1)} Login`,
+            text: `Funcionalidade em desenvolvimento. Em breve poderá aceder com ${provider}.`,
+            icon: 'info',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24'
+        });
+    }
+
+    // Verificar se já está logado
+    function checkAutoLogin() {
+        const logged = localStorage.getItem('userLogged');
+        if (logged === 'true') {
+            // Redirecionar para área do cliente se já logado
+            // window.location.href = 'gerenciamento.html';
+        }
+    }
+
+    // Eventos
+    document.getElementById('btnLogin').addEventListener('click', realizarLogin);
+    document.getElementById('forgotPasswordBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirRecoveryModal();
+    });
+    document.getElementById('registerBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirRegisterModal();
+    });
+
+    // Enter key no formulário
+    document.getElementById('passwordLogin').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') realizarLogin();
+    });
+    document.getElementById('emailLogin').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') realizarLogin();
+    });
+
+    toastr.options = { closeButton: true, progressBar: true, positionClass: "toast-top-right", timeOut: "4000" };
+    checkAutoLogin();
+
+    // Alertas de demonstração
+    setTimeout(() => {
+        Swal.fire({
+            title: '🔐 Área do Cliente',
+            html: '<strong>Credenciais de demonstração:</strong><br>E-mail: cliente@dpedrosolucoes.ao<br>Senha: dpedro2026',
+            icon: 'info',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24',
+            confirmButtonText: 'Usar demonstração'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('emailLogin').value = 'cliente@dpedrosolucoes.ao';
+                document.getElementById('passwordLogin').value = 'dpedro2026';
+            }
+        });
+    }, 1500);
+
+    // Exportar funções globais
+    window.toggleMenu = toggleMenu;
+    window.fecharRecoveryModal = fecharRecoveryModal;
+    window.fecharRegisterModal = fecharRegisterModal;
+    window.enviarRecuperacao = enviarRecuperacao;
+    window.registrarCliente = registrarCliente;
+    window.socialLogin = socialLogin;
+</script>
+</body>
+</html>

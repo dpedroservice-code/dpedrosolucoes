@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Quem Somos | D.PEDRO SOLUÇÕES – Tecnologia, Segurança & Energia</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Conheça a história, missão e valores da D.PEDRO SOLUÇÕES. Tecnologia, inovação e excelência em segurança eletrónica, energia e soluções integradas em Angola. Veja nosso trabalho e equipa em ação.">
+    <meta name="keywords" content="Quem somos D.PEDRO, empresa segurança Angola, tecnologia Luanda, valores, missão, imagens de projetos, equipa">
+    <meta name="author" content="D.PEDRO SOLUÇÕES">
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://i.ibb.co/fVJjMXtL/logo1.png" type="image/x-icon">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/hFnw5Br7/logo.jpg">
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/lightgallery@2.7.1/css/lightgallery-bundle.min.css">
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* ========== FUNDO TECNOLÓGICO ========== */
+        body {
+            background: radial-gradient(circle at top left, #2563eb15, transparent 30%),
+                        radial-gradient(circle at bottom right, #fbbf2415, transparent 30%),
+                        #0f172a;
+            color: #e2e8f0;
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ========== LOADER ========== */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(37,99,235,0.3);
+            border-top-color: #fbbf24;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ========== CURSOR LUMINOSO ========== */
+        @media (min-width: 769px) {
+            .cursor-glow {
+                position: fixed;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: #2563eb;
+                pointer-events: none;
+                filter: blur(15px);
+                z-index: 9999;
+                transition: transform 0.1s ease;
+            }
+        }
+
+        /* ========== TOP BAR & NAVEGAÇÃO (mesmo estilo) ========== */
+        .top-bar {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(251,191,36,0.3);
+        }
+        .top-bar .contact-info { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+        .top-bar .contact-info i { color: #fbbf24; }
+        .social-links a { color: #cbd5e1; margin-left: 1rem; transition: 0.2s; }
+        .social-links a:hover { color: #fbbf24; transform: translateY(-2px); }
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; text-align: center; gap: 0.5rem; }
+            .top-bar .contact-info { justify-content: center; }
+        }
+
+        nav {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { display: flex; align-items: center; gap: 0.75rem; }
+        .logo img { height: 55px; transition: 0.3s; }
+        .logo-text { font-weight: 700; font-size: 1.2rem; color: white; line-height: 1.2; }
+        .logo-text small { display: block; font-size: 0.55rem; color: #94a3b8; }
+        .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+        .nav-links a, .nav-links button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-weight: 500;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .nav-links a:hover, .nav-links a.active { background: rgba(37,99,235,0.3); color: #fbbf24; }
+        .btn-app { background: linear-gradient(135deg, #22c55e, #16a34a) !important; color: white !important; }
+        .menu-toggle { display: none; cursor: pointer; font-size: 1.5rem; background: none; border: none; color: white; }
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(15,23,42,0.98);
+                backdrop-filter: blur(15px);
+                padding: 1.5rem;
+                gap: 0.8rem;
+                z-index: 99;
+                border-bottom: 1px solid rgba(251,191,36,0.3);
+            }
+            .nav-links.active { display: flex; }
+            .menu-toggle { display: block; }
+        }
+
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 5%; }
+
+        /* ========== PÁGINA QUEM SOMOS ========== */
+        .page-header { text-align: center; margin: 2rem 0 1rem; }
+        .page-header h1 { font-size: 2.8rem; background: linear-gradient(135deg, #ffffff, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+        .about-hero {
+            background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(15,23,42,0.9));
+            border-radius: 2rem;
+            padding: 2.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(251,191,36,0.3);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+        }
+        .about-hero-text { flex: 2; }
+        .about-hero-text h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+        .about-stats { flex: 1; display: flex; gap: 1rem; justify-content: center; }
+        .stat-badge { background: rgba(255,255,255,0.08); border-radius: 1.5rem; padding: 1rem; text-align: center; backdrop-filter: blur(5px); border: 1px solid rgba(251,191,36,0.2); }
+        .stat-badge h3 { font-size: 2rem; color: #fbbf24; }
+
+        /* Galeria de Imagens (trabalhos e equipa) */
+        .gallery-section { margin: 3rem 0; }
+        .section-title { font-size: 1.8rem; margin: 2rem 0 1.5rem; display: flex; align-items: center; gap: 0.75rem; color: white; }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .gallery-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .gallery-item:hover { transform: translateY(-8px); border-color: #fbbf24; box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        .gallery-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: 0.3s;
+        }
+        .gallery-caption { padding: 0.8rem; text-align: center; font-weight: 500; color: #cbd5e1; background: rgba(0,0,0,0.4); }
+
+        /* Vídeo Destaque */
+        .video-showcase {
+            background: rgba(15,23,42,0.6);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(251,191,36,0.3);
+        }
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+        .video-wrapper iframe, .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .mission-vision { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin: 2rem 0; }
+        .mv-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border-radius: 1.8rem; padding: 2rem; text-align: center; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+        .mv-card:hover { transform: translateY(-8px); border-color: #fbbf24; }
+        .mv-card i { font-size: 3rem; color: #fbbf24; margin-bottom: 1rem; }
+
+        .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .value-item { background: rgba(37,99,235,0.1); border-radius: 1.5rem; padding: 1.5rem; border-left: 4px solid #fbbf24; }
+
+        .team-section { margin: 3rem 0; }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.8rem; }
+        .team-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border-radius: 1.5rem; padding: 1.5rem; text-align: center; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
+        .team-avatar { width: 100px; height: 100px; background: linear-gradient(135deg, #2563eb, #fbbf24); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 3rem; color: white; }
+
+        .contact-block {
+            background: rgba(15,23,42,0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 2.5rem;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(251,191,36,0.3);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px #2563eb; }
+
+        footer {
+            background: rgba(5,15,40,0.95);
+            backdrop-filter: blur(10px);
+            color: #94a3b8;
+            padding: 3rem 5% 1.5rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(251,191,36,0.2);
+        }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; }
+        .footer-col a { color: #94a3b8; text-decoration: none; display: block; margin: 0.5rem 0; }
+        .footer-col a:hover { color: #fbbf24; }
+        .whatsapp-float {
+            position: fixed; bottom: 30px; right: 30px; background: #25D366; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;
+            font-size: 2rem; z-index: 100; text-decoration: none; animation: bounce 2s infinite;
+        }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        .top-arrow {
+            position: fixed; bottom: 110px; right: 30px; background: #fbbf24; width: 50px; height: 50px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0f172a;
+            font-size: 1.5rem; cursor: pointer; z-index: 99;
+        }
+        @media (max-width:768px){
+            .whatsapp-float{width:50px;height:50px;font-size:1.5rem}
+            .top-arrow{width:40px;height:40px;bottom:90px}
+        }
+    </style>
+</head>
+<body>
+
+<div id="loader"><div class="loader-spinner"></div></div>
+<div class="cursor-glow"></div>
+
+<!-- Top bar -->
+<div class="top-bar">
+    <div class="contact-info">
+        <span><i class="fas fa-phone-alt"></i> 946 299 834 | 959 777 301</span>
+        <span><i class="fas fa-map-marker-alt"></i> Luanda, Viana, Vila Flor</span>
+        <span><i class="fas fa-envelope"></i> dpedroservice@gmail.com</span>
+    </div>
+    <div class="social-links">
+        <a href="https://wa.me/244946299834" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="mailto:dpedroservice@gmail.com"><i class="fas fa-envelope"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook"></i></a>
+    </div>
+</div>
+
+<!-- Navegação -->
+<nav>
+    <div class="logo">
+        <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+            <img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="D.PEDRO SOLUÇÕES">
+            <div class="logo-text">D.PEDRO SOLUÇÕES <small>COMÉRCIO E PRESTAÇÃO DE SERVIÇOS</small></div>
+        </a>
+    </div>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <div class="nav-links" id="navLinks">
+        <a href="index.html">Início</a>
+        <a href="quem-somos.html" class="active">Quem somos</a>
+        <a href="mercados-verticais.html">Mercados Verticais</a>
+        <a href="solucoes.html">Soluções</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="recrutamento.html">Recrutamento</a>
+        <a href="contactos.html">Contactos</a>
+        <a href="curso.html">Curso</a>
+        <a href="projetos.html">Projetos</a>
+        <a href="gerenciamento.html">Gerenciamento</a>
+        <a href="donload.html" class="btn-app"><i class="fas fa-download"></i> App</a>
+    </div>
+</nav>
+
+<main class="container">
+    <div class="page-header">
+        <h1><i class="fas fa-users"></i> Quem Somos</h1>
+        <p>Inovação, confiança e excelência em soluções tecnológicas para Angola</p>
+    </div>
+
+    <!-- Bloco institucional + stats -->
+    <div class="about-hero">
+        <div class="about-hero-text">
+            <h2>D.PEDRO SOLUÇÕES, LDA</h2>
+            <p>Somos uma empresa angolana especializada em <strong>segurança eletrónica, sistemas de energia off grid, redes, desenvolvimento web e soluções gráficas</strong>. Com sede em Luanda, Kilamba – Vila Flor, nascemos da paixão por tecnologia e do compromisso de oferecer soluções inteligentes que protegem e impulsionam negócios e residências.</p>
+            <p>Com mais de 10 anos de experiência, destacamo-nos pela implementação de sistemas de CFTV, controlo de acessos, alarmes, cerca elétrica, deteção de incêndio, energias renováveis e automação. Atendemos desde pequenas empresas até grandes infraestruturas, garantindo suporte 24/7 e qualidade certificada.</p>
+        </div>
+        <div class="about-stats">
+            <div class="stat-badge"><h3>10+</h3><span>Anos de mercado</span></div>
+            <div class="stat-badge"><h3>500+</h3><span>Clientes satisfeitos</span></div>
+        </div>
+    </div>
+
+    <!-- ========== GALERIA DE TRABALHOS E EQUIPA (IMAGENS REAIS) ========== -->
+    <div class="gallery-section">
+        <h2 class="section-title"><i class="fas fa-camera"></i> Nossos Trabalhos & Projetos em Ação</h2>
+        <div class="gallery-grid" id="workGallery">
+            <!-- 6 imagens de serviços/projetos - usando imagens reais dos serviços -->
+            <div class="gallery-item" data-src="https://i.ibb.co/yFxYKkjq/tecnico.png">
+                <img class="gallery-img" src="https://i.ibb.co/yFxYKkjq/tecnico.png" alt="Instalação CFTV">
+                <div class="gallery-caption">Instalação de CFTV profissional</div>
+            </div>
+            <div class="gallery-item" data-src="https://i.ibb.co/Kp80yKMc/controle-acesso.png">
+                <img class="gallery-img" src="https://i.ibb.co/Kp80yKMc/controle-acesso.png" alt="Controlo de Acesso">
+                <div class="gallery-caption">Sistema de controlo de acesso biométrico</div>
+            </div>
+            <div class="gallery-item" data-src="https://i.ibb.co/pjRd83wc/energia.png">
+                <img class="gallery-img" src="https://i.ibb.co/pjRd83wc/energia.png" alt="Energia Solar Off Grid">
+                <div class="gallery-caption">Painéis solares – Projeto Off Grid</div>
+            </div>
+            <div class="gallery-item" data-src="https://i.ibb.co/FLP81SfP/cerca-eletrica.png">
+                <img class="gallery-img" src="https://i.ibb.co/FLP81SfP/cerca-eletrica.png" alt="Cerca Elétrica">
+                <div class="gallery-caption">Cerca elétrica de alta segurança</div>
+            </div>
+            <div class="gallery-item" data-src="https://i.ibb.co/0RcSnHnv/impressora.png">
+                <img class="gallery-img" src="https://i.ibb.co/0RcSnHnv/impressora.png" alt="Gráfica e Brindes">
+                <div class="gallery-caption">Gráfica e brindes personalizados</div>
+            </div>
+            <div class="gallery-item" data-src="https://i.ibb.co/j9DSLVHR/nvr-32.jpg">
+                <img class="gallery-img" src="https://i.ibb.co/j9DSLVHR/nvr-32.jpg" alt="Sala de servidores">
+                <div class="gallery-caption">Central de monitoramento NVR</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== VÍDEO DE APRESENTAÇÃO (TRABALHO E EQUIPA) ========== -->
+    <div class="video-showcase">
+        <h2 class="section-title" style="margin-top:0"><i class="fas fa-play-circle"></i> Conheça Nossa Equipa & Soluções em Vídeo</h2>
+        <div class="video-wrapper">
+            <!-- Vídeo institucional/ demostrativo do YouTube sobre segurança e equipa (exemplo relevante) -->
+            <iframe src="https://www.youtube.com/embed/IELmwLRqXnc?autoplay=0&rel=0" title="D.PEDRO SOLUÇÕES - Segurança e Tecnologia" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <p style="margin-top: 1rem; text-align: center; color:#94a3b8;">Demonstração de sistemas de CFTV e apresentação dos nossos técnicos especializados.</p>
+    </div>
+
+    <!-- Galeria da Equipa (imagens da equipa em ação) -->
+    <div class="gallery-section">
+        <h2 class="section-title"><i class="fas fa-users"></i> A Nossa Equipa em Ação</h2>
+        <div class="gallery-grid" id="teamGallery">
+            <div class="gallery-item" data-src="https://i.ibb.co/FLs7FFRx/cftv.png">
+                <img class="gallery-img" src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="Técnico instalando câmera">
+                <div class="gallery-caption">Engenheiros em campo – instalação profissional</div>
+            </div>
+            <div class="gallery-item" data-src="https://i.ibb.co/fzstMFqM/biometrico.jpg">
+                <img class="gallery-img" src="https://i.ibb.co/fzstMFqM/biometrico.jpg" alt="Configuração de biometria">
+                <div class="gallery-caption">Configuração de controlo biométrico</div>
+            </div>
+            <div class="gallery-item" data-src="https://i.ibb.co/TBFvYWPR/seguranca.jpg">
+                <img class="gallery-img" src="https://i.ibb.co/TBFvYWPR/seguranca.jpg" alt="Equipa de suporte">
+                <div class="gallery-caption">Equipa de suporte técnico 24/7</div>
+            </div>
+            <div class="gallery-item" data-src="https://i.ibb.co/xSKRh3ft/video-porteiro.png">
+                <img class="gallery-img" src="https://i.ibb.co/xSKRh3ft/video-porteiro.png" alt="Instalação de videoporteiro">
+                <div class="gallery-caption">Instalação de videoporteiro IP</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Missão, Visão e Valores -->
+    <div class="mission-vision">
+        <div class="mv-card"><i class="fas fa-bullseye"></i><h3>Missão</h3><p>Oferecer soluções tecnológicas integradas que garantam segurança, eficiência energética e inovação, superando as expectativas dos clientes em Angola.</p></div>
+        <div class="mv-card"><i class="fas fa-eye"></i><h3>Visão</h3><p>Ser referência nacional em segurança eletrónica e energias renováveis, expandindo para toda a África Austral até 2030.</p></div>
+        <div class="mv-card"><i class="fas fa-heart"></i><h3>Valores</h3><p>Compromisso, ética, inovação, transparência e foco no cliente. Cada projeto é único e tratado com máxima dedicação.</p></div>
+    </div>
+
+    <!-- Pilares -->
+    <h2 class="section-title"><i class="fas fa-gem"></i> Nossos Pilares</h2>
+    <div class="values-grid">
+        <div class="value-item"><h4><i class="fas fa-microchip"></i> Inovação Contínua</h4><p>Utilizamos IA, IoT e análise de vídeo para manter nossos clientes à frente.</p></div>
+        <div class="value-item"><h4><i class="fas fa-handshake"></i> Confiança</h4><p>Parcerias sólidas com marcas globais (Hikvision, Dahua, Bosch).</p></div>
+        <div class="value-item"><h4><i class="fas fa-clock"></i> Disponibilidade 24/7</h4><p>Equipe técnica de prontidão para emergências e suporte remoto.</p></div>
+        <div class="value-item"><h4><i class="fas fa-leaf"></i> Sustentabilidade</h4><p>Energia limpa com sistemas Off Grid para um futuro mais verde.</p></div>
+    </div>
+
+    <!-- Liderança -->
+    <div class="team-section">
+        <h2 class="section-title"><i class="fas fa-user-tie"></i> Liderança & Especialistas</h2>
+        <div class="team-grid">
+            <div class="team-card"><div class="team-avatar"><i class="fas fa-user-circle"></i></div><h4>Daniel Pedro</h4><p>CEO & Fundador</p><small>+10 anos em segurança</small></div>
+            <div class="team-card"><div class="team-avatar"><i class="fas fa-laptop-code"></i></div><h4>Eng. Adilson</h4><p>Diretor Técnico</p><small>Certificações Hikvision</small></div>
+            <div class="team-card"><div class="team-avatar"><i class="fas fa-charging-station"></i></div><h4>Eng. Luzia</h4><p>Gestora de Projetos</p><small>Especialista Solar</small></div>
+            <div class="team-card"><div class="team-avatar"><i class="fas fa-headset"></i></div><h4>Equipe Técnica</h4><p>+10 profissionais</p><small>Suporte 24/7</small></div>
+        </div>
+    </div>
+
+    <!-- Contacto final -->
+    <div class="contact-block">
+        <span class="contact-highlight"><i class="fas fa-phone-alt"></i> 946 299 834 / 959 777 301</span>
+        <span><i class="fas fa-envelope"></i> dpedroservice@gmail.com</span>
+        <button class="btn-primary" onclick="window.open('https://wa.me/244946299834?text=Olá! Gostaria de conhecer mais sobre a D.PEDRO SOLUÇÕES.', '_blank')"><i class="fab fa-whatsapp"></i> Fale Connosco</button>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col"><strong>D.PEDRO SOLUÇÕES</strong><p>Comércio e Prestação de Serviços, Lda.</p><p>Luanda, Angola - Vila Flor, Kilamba</p></div>
+        <div class="footer-col"><strong>Contactos</strong><p><i class="fas fa-phone"></i> +244 946 299 834</p><p><i class="fas fa-envelope"></i> dpedroservice@gmail.com</p></div>
+        <div class="footer-col"><strong>Horário</strong><p>Segunda - Sexta: 8h - 18h</p><p>Sábado: 8h - 13h</p><p>Suporte Técnico 24/7</p></div>
+        <div class="footer-col"><strong>Links</strong><a href="index.html">Início</a><a href="quem-somos.html">Quem somos</a><a href="solucoes.html">Soluções</a><a href="contactos.html">Contactos</a></div>
+    </div>
+    <div class="footer-bottom"><div>© 2026 D.PEDRO SOLUÇÕES – Todos os direitos reservados</div><div><i class="fas fa-heart" style="color:#fbbf24"></i> Tecnologia e Segurança</div></div>
+</footer>
+
+<a href="https://wa.me/244946299834" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<div class="top-arrow" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></div>
+
+<script>
+    // Loader
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        }, 800);
+    });
+
+    // Cursor glow
+    if (window.innerWidth > 768) {
+        const glow = document.querySelector('.cursor-glow');
+        document.addEventListener('mousemove', (e) => glow.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`);
+    }
+
+    // Mobile menu
+    function toggleMenu() { document.getElementById('navLinks').classList.toggle('active'); }
+    document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) document.getElementById('navLinks').classList.remove('active');
+    }));
+
+    // LightGallery para ambas as galerias (clique nas imagens abre em lightbox)
+    if (typeof lightGallery !== 'undefined') {
+        lightGallery(document.getElementById('workGallery'), {
+            selector: '.gallery-item',
+            speed: 500,
+            download: false,
+            counter: true
+        });
+        lightGallery(document.getElementById('teamGallery'), {
+            selector: '.gallery-item',
+            speed: 500,
+            download: false,
+            counter: true
+        });
+    } else {
+        // fallback simples: abrir imagem em nova aba ao clicar
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const imgSrc = item.getAttribute('data-src');
+                if(imgSrc) window.open(imgSrc, '_blank');
+            });
+        });
+    }
+
+    // Contador animado stats
+    const stats = document.querySelectorAll('.stat-badge h3');
+    const observerStats = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting){
+                stats.forEach(stat => {
+                    let target = parseInt(stat.innerText);
+                    if(isNaN(target)) target = 10;
+                    let current = 0;
+                    const step = target / 30;
+                    const update = () => {
+                        current += step;
+                        if(current < target){
+                            stat.innerText = Math.ceil(current) + (stat.innerText.includes('+') ? '+' : '');
+                            requestAnimationFrame(update);
+                        } else {
+                            stat.innerText = target + (stat.innerText.includes('+') ? '+' : '');
+                        }
+                    };
+                    update();
+                });
+                observerStats.disconnect();
+            }
+        });
+    });
+    const aboutStats = document.querySelector('.about-stats');
+    if(aboutStats) observerStats.observe(aboutStats);
+
+    // Pequeno alerta promocional
+    setTimeout(() => {
+        Swal.fire({
+            title: '📸 Conheça nosso portfólio!',
+            text: 'Temos dezenas de projetos realizados em Luanda. Clique nas imagens para ampliar.',
+            icon: 'info',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24',
+            confirmButtonText: 'Ver trabalhos'
+        });
+    }, 2500);
+</script>
+</body>
+</html>

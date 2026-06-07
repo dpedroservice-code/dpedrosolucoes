@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>KanawaSoft | Sistema de Gestão ERP - MRP | D.PEDRO SOLUÇÕES</title>
+    <meta name="description" content="KanawaSoft - Sistema de Gestão Completo ERP-MRP para Windows. Controle de vendas, estoque, financeiro, produção e muito mais.">
+    <meta name="keywords" content="ERP, MRP, KanawaSoft, Gestão Empresarial, PDV, Angola, Luanda">
+    <meta name="author" content="D.PEDRO SOLUÇÕES">
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://i.ibb.co/fVJjMXtL/logo1.png" type="image/x-icon">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/hFnw5Br7/logo.jpg">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #f8fafd;
+            color: #0f172a;
+        }
+        /* Top Bar */
+        .top-bar {
+            background: #0f172a;
+            color: white;
+            padding: 0.5rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border-bottom: 2px solid #fbbf24;
+        }
+        .top-bar .contact-info span {
+            margin-right: 1.5rem;
+        }
+        .top-bar .contact-info i {
+            color: #60a5fa;
+        }
+        .social-links a {
+            color: #cbd5e1;
+            margin-left: 1rem;
+            transition: 0.2s;
+        }
+        .social-links a:hover {
+            color: #fbbf24;
+        }
+        /* Navegação */
+        nav {
+            background: white;
+            padding: 0.8rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .logo img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+        .logo-mark {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white;
+        }
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: #0f172a;
+        }
+        .logo-text small {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: #475569;
+        }
+        .nav-links {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            background: #eef2ff;
+            color: #2563eb;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+        /* Hero Section */
+        .hero-kanawa {
+            background: linear-gradient(135deg, #0f2b5e, #1e3a8a);
+            border-radius: 2rem;
+            padding: 3rem 2.5rem;
+            margin: 2rem 0;
+            color: white;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+        .hero-kanawa h1 {
+            font-size: 3rem;
+            font-weight: 800;
+        }
+        .hero-kanawa h1 span {
+            color: #fbbf24;
+        }
+        .hero-badge {
+            background: #fbbf24;
+            color: #0f172a;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            display: inline-block;
+            font-weight: 700;
+            margin-top: 1rem;
+        }
+        .version-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            display: inline-block;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .btn-demo {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: 0.2s;
+        }
+        .btn-demo:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+        }
+        /* Seção de Vídeos */
+        .video-section {
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid #e2e8f0;
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .video-card {
+            background: #f8fafd;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            background: #000;
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .video-caption {
+            padding: 1rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        /* Seção de Downloads */
+        .download-section {
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid #e2e8f0;
+        }
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .download-card {
+            background: #f8fafc;
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid #e2e8f0;
+        }
+        .download-card:hover {
+            transform: translateY(-5px);
+            border-color: #2563eb;
+        }
+        .download-icon {
+            width: 80px;
+            height: 80px;
+            background: #e0e7ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        .download-icon i {
+            font-size: 2.5rem;
+            color: #2563eb;
+        }
+        .btn-download {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        /* Seção de Licenças */
+        .license-section {
+            background: linear-gradient(135deg, #f1f5f9, #ffffff);
+            border-radius: 2rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid #e2e8f0;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
+            margin: 1.5rem 0;
+        }
+        .pricing-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        .pricing-card.featured {
+            border: 2px solid #fbbf24;
+            transform: scale(1.02);
+        }
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2563eb;
+            margin: 1rem 0;
+        }
+        .btn-buy {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        /* Módulos Grid */
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 2.5rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .module-card {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .module-card:hover {
+            border-color: #2563eb;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .module-icon {
+            width: 50px;
+            height: 50px;
+            background: #e0e7ff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .module-icon i {
+            font-size: 1.5rem;
+            color: #2563eb;
+        }
+        .module-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .module-features {
+            list-style: none;
+            margin-top: 0.8rem;
+        }
+        .module-features li {
+            font-size: 0.8rem;
+            color: #475569;
+            padding: 0.2rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .module-features li i {
+            color: #22c55e;
+            font-size: 0.7rem;
+        }
+        .btn-config {
+            margin-top: 1rem;
+            background: none;
+            border: 1px solid #2563eb;
+            color: #2563eb;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-config:hover {
+            background: #2563eb;
+            color: white;
+        }
+        /* Configurações Transversais */
+        .transversal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .transversal-item {
+            background: #f1f5f9;
+            border-radius: 1rem;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        /* Atualizações */
+        .updates-section {
+            background: #f1f5f9;
+            border-radius: 2rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        .update-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .update-list li {
+            padding: 0.8rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .update-list li i {
+            color: #22c55e;
+        }
+        .btn-update {
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        /* Requisitos */
+        .requirements {
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid #e2e8f0;
+        }
+        .req-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .req-item {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 1rem;
+        }
+        /* Imagem Institucional */
+        .company-image {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 2rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            color: white;
+        }
+        .company-image img {
+            max-width: 100%;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.3);
+        }
+        /* Formulário */
+        .demo-form {
+            background: white;
+            border-radius: 2rem;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            border: 1px solid #e2e8f0;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+        .input-group {
+            position: relative;
+        }
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+        }
+        .btn-submit {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 2rem 5%;
+            margin-top: 3rem;
+            text-align: center;
+            border-radius: 2rem 2rem 0 0;
+        }
+        @media (max-width: 768px) {
+            .hero-kanawa h1 { font-size: 2rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .modules-grid { grid-template-columns: 1fr; }
+            .download-grid { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .pricing-card.featured { transform: none; }
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 2rem;
+            max-width: 500px;
+            width: 90%;
+            padding: 2rem;
+            text-align: center;
+        }
+        .suporte-box {
+            background: #dbeafe;
+            border-radius: 2rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div class="contact-info">
+        <span><i class="fas fa-phone-alt"></i> 946 299 834 | 959 777 301</span>
+        <span><i class="fas fa-map-marker-alt"></i> Luanda, Kilamba, Vila Flor</span>
+        <span><i class="fas fa-envelope"></i> dpedroservice@gmail.com</span>
+    </div>
+    <div class="social-links">
+        <a href="https://wa.me/244946299834" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://www.instagram.com/dpedro_solucoes/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+    </div>
+</div>
+
+<nav>
+    <div class="logo">
+        <img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="KanawaSoft" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="logo-mark" style="display: none;">KS</div>
+        <div class="logo-text">KanawaSoft <small>ERP - MRP</small></div>
+    </div>
+    <div class="nav-links">
+        <a href="index.html">Início</a>
+        <a href="#download" class="active">Download</a>
+        <a href="#licencas">Licenças</a>
+        <a href="#modulos">Módulos</a>
+        <a href="#tutoriais">Tutoriais</a>
+        <a href="#atualizacoes">Atualizações</a>
+        <a href="#demo">Demonstração</a>
+    </div>
+</nav>
+
+<main class="container">
+    <!-- Hero Section -->
+    <div class="hero-kanawa" id="home">
+        <div>
+            <h1>Kanawa<span>Soft</span></h1>
+            <p style="font-size: 1.2rem; margin: 0.5rem 0;">Sistema de Gestão Completo ERP - MRP para Windows</p>
+            <div class="hero-badge"><i class="fas fa-tag"></i> Versão atual: 3.2.0</div>
+            <div class="version-badge"><i class="fas fa-calendar"></i> Última atualização: Junho 2026</div>
+            <button class="btn-demo" id="openDemoBtn"><i class="fas fa-calendar-alt"></i> Solicitar Demonstração Grátis</button>
+        </div>
+        <div style="background: rgba(255,255,255,0.1); border-radius: 2rem; padding: 1.5rem;">
+            <i class="fas fa-desktop" style="font-size: 4rem;"></i>
+            <i class="fas fa-chart-line" style="font-size: 4rem; margin-left: 1rem;"></i>
+            <i class="fas fa-chart-pie" style="font-size: 4rem; margin-left: 1rem;"></i>
+        </div>
+    </div>
+
+    <!-- SEÇÃO DE VÍDEOS - Tutoriais YouTube -->
+    <div class="video-section" id="tutoriais">
+        <h2><i class="fas fa-video"></i> Vídeos de Demonstração e Tutoriais</h2>
+        <p>Aprenda a utilizar todas as funcionalidades do KanawaSoft com nossos vídeos passo a passo.</p>
+        <div class="video-grid">
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/IELmwLRqXnc" title="Tutorial 1: Instalação" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="video-caption">📦 Tutorial 1: Instalação e Configuração Inicial</div>
+            </div>
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/IELmwLRqXnc" title="Tutorial 2: Dashboard" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="video-caption">🚀 Tutorial 2: Primeiros Passos e Dashboard</div>
+            </div>
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/IELmwLRqXnc" title="Tutorial 3: PDV" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="video-caption">💰 Tutorial 3: Como Registrar Vendas e PDV</div>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: #64748b;">📺 Assista nossos tutoriais no YouTube - Clique e aprenda!</p>
+    </div>
+
+    <!-- DOWNLOAD DO SETUP -->
+    <div class="download-section" id="download">
+        <h2><i class="fas fa-download"></i> Baixar KanawaSoft Desktop</h2>
+        <p>Faça o download do instalador do sistema. Versão Trial disponível por 30 dias.</p>
+        <div class="download-grid">
+            <div class="download-card">
+                <div class="download-icon"><i class="fab fa-windows"></i></div>
+                <h3>Setup Completo</h3>
+                <p>Instalador para Windows 10/11 (64 bits)</p>
+                <p style="font-size: 0.8rem; color: #64748b;">Tamanho: 245 MB</p>
+                <button class="btn-download" onclick="downloadSetup()"><i class="fas fa-download"></i> Baixar Setup</button>
+            </div>
+            <div class="download-card">
+                <div class="download-icon"><i class="fas fa-file-archive"></i></div>
+                <h3>Versão Portable</h3>
+                <p>Não necessita instalação, execute direto do pendrive</p>
+                <p style="font-size: 0.8rem; color: #64748b;">Tamanho: 180 MB</p>
+                <button class="btn-download" onclick="downloadPortable()"><i class="fas fa-download"></i> Baixar Portable</button>
+            </div>
+            <div class="download-card">
+                <div class="download-icon"><i class="fas fa-database"></i></div>
+                <h3>Banco de Dados</h3>
+                <p>Scripts e ferramentas para instalação do banco</p>
+                <p style="font-size: 0.8rem; color: #64748b;">PostgreSQL / MySQL</p>
+                <button class="btn-download" onclick="downloadDatabase()"><i class="fas fa-download"></i> Baixar Scripts</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LICENÇAS E PREÇOS -->
+    <div class="license-section" id="licencas">
+        <h2><i class="fas fa-tag"></i> Adquirir Licença do KanawaSoft</h2>
+        <p>Escolha o plano ideal para o seu negócio. Licença vitalícia com 1 ano de atualizações.</p>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Básico</h3>
+                <div class="price">14.500 Kz</div>
+                <p><i class="fas fa-check"></i> 1 usuário</p>
+                <p><i class="fas fa-check"></i> PDV + Estoque</p>
+                <p><i class="fas fa-check"></i> Clientes e Fornecedores</p>
+                <p><i class="fas fa-check"></i> Relatórios básicos</p>
+                <p><i class="fas fa-times"></i> Suporte prioritário</p>
+                <button class="btn-buy" onclick="comprarLicenca('Básico', 14500)">Comprar Licença</button>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Profissional</h3>
+                <div class="price">29.500 Kz</div>
+                <p><i class="fas fa-check"></i> Até 5 usuários</p>
+                <p><i class="fas fa-check"></i> Todos os módulos</p>
+                <p><i class="fas fa-check"></i> Financeiro completo</p>
+                <p><i class="fas fa-check"></i> Suporte prioritário 1 ano</p>
+                <p><i class="fas fa-check"></i> Atualizações grátis</p>
+                <button class="btn-buy" onclick="comprarLicenca('Profissional', 29500)">Comprar Licença</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">50.500 Kz</div>
+                <p><i class="fas fa-check"></i> Usuários ilimitados</p>
+                <p><i class="fas fa-check"></i> Multi-empresa</p>
+                <p><i class="fas fa-check"></i> API de integração</p>
+                <p><i class="fas fa-check"></i> Suporte dedicado 24/7</p>
+                <p><i class="fas fa-check"></i> Treinamento incluso</p>
+                <button class="btn-buy" onclick="comprarLicenca('Enterprise', 50500)">Comprar Licença</button>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem;">* Licença vitalícia com 1 ano de atualizações inclusas. Renovação anual: 30% do valor.</p>
+    </div>
+
+    <!-- MÓDULOS DO SISTEMA -->
+    <h2 class="section-title" id="modulos"><i class="fas fa-cubes"></i> Módulos do Sistema KanawaSoft ERP - MRP</h2>
+    <div class="modules-grid" id="modulesGrid"></div>
+
+    <!-- Configurações Transversais -->
+    <h2 class="section-title"><i class="fas fa-exchange-alt"></i> Configurações Transversais</h2>
+    <div class="transversal-grid" id="transversalGrid"></div>
+
+    <!-- ATUALIZAÇÕES DO SISTEMA -->
+    <div class="updates-section" id="atualizacoes">
+        <h2><i class="fas fa-sync-alt"></i> Atualizações do Sistema</h2>
+        <p>Mantenha seu KanawaSoft sempre atualizado com as últimas melhorias.</p>
+        <ul class="update-list">
+            <li><i class="fas fa-check-circle"></i> <strong>Versão 3.2.0</strong> - Novo módulo de MRP, melhorias no PDV e correções de bugs (15/06/2026)</li>
+            <li><i class="fas fa-check-circle"></i> <strong>Versão 3.1.5</strong> - Integração com API de Notas Fiscais, relatórios personalizados (10/05/2026)</li>
+            <li><i class="fas fa-check-circle"></i> <strong>Versão 3.1.0</strong> - Lançamento do módulo Financeiro completo (01/04/2026)</li>
+            <li><i class="fas fa-check-circle"></i> <strong>Versão 3.0.2</strong> - Melhorias de performance e segurança (15/02/2026)</li>
+        </ul>
+        <button class="btn-update" onclick="verificarAtualizacao()"><i class="fas fa-search"></i> Verificar Atualizações</button>
+        <button class="btn-update" onclick="baixarUpdate()" style="background: #2563eb; margin-left: 1rem;"><i class="fas fa-sync-alt"></i> Baixar Última Versão</button>
+    </div>
+
+    <!-- REQUISITOS DO SISTEMA -->
+    <div class="requirements">
+        <h2><i class="fas fa-microchip"></i> Requisitos Mínimos do Sistema</h2>
+        <div class="req-grid">
+            <div class="req-item"><i class="fab fa-windows"></i> <strong>Sistema:</strong> Windows 10 / 11 (64 bits)</div>
+            <div class="req-item"><i class="fas fa-microchip"></i> <strong>Processador:</strong> Intel Core i3 ou superior</div>
+            <div class="req-item"><i class="fas fa-memory"></i> <strong>Memória RAM:</strong> 4GB (recomendado 8GB)</div>
+            <div class="req-item"><i class="fas fa-hdd"></i> <strong>Espaço em Disco:</strong> 500GB disponíveis</div>
+            <div class="req-item"><i class="fas fa-database"></i> <strong>Banco de Dados:</strong> PostgreSQL 12+ ou MySQL 8+</div>
+            <div class="req-item"><i class="fas fa-globe"></i> <strong>Internet:</strong> Recomendado para ativação e backups</div>
+        </div>
+    </div>
+
+    <!-- Imagem Institucional da Empresa -->
+    <div class="company-image">
+        <h3><i class="fas fa-building"></i> Conheça a D.PEDRO SOLUÇÕES</h3>
+        <p>Desenvolvedora do KanawaSoft - Tecnologia, Segurança & Serviços</p>
+        <img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="D.PEDRO SOLUÇÕES - KanawaSoft">
+        <p style="margin-top: 1rem; font-size: 0.8rem;">📍 Luanda, Kilamba, Vila Flor | +244 946 299 834</p>
+    </div>
+
+    <!-- Formulário de Demonstração -->
+    <div class="demo-form" id="demo">
+        <h3><i class="fas fa-chalkboard-user"></i> Solicite uma Demonstração Personalizada</h3>
+        <p>Preencha o formulário e nossa equipa entrará em contacto para agendar uma demonstração completa do KanawaSoft.</p>
+        <form id="demoForm">
+            <div class="form-row">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="demoNome" placeholder="Nome completo *" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-building"></i>
+                    <input type="text" id="demoEmpresa" placeholder="Nome da Empresa">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <i class="fas fa-phone-alt"></i>
+                    <input type="tel" id="demoTelefone" placeholder="Telefone (WhatsApp) *" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="demoEmail" placeholder="E-mail">
+                </div>
+            </div>
+            <div class="input-group" style="margin-bottom: 1rem;">
+                <i class="fas fa-comment"></i>
+                <textarea id="demoMensagem" rows="3" placeholder="Quais módulos tem interesse? Quantos usuários? ..."></textarea>
+            </div>
+            <button type="button" class="btn-submit" id="submitDemoBtn"><i class="fab fa-whatsapp"></i> Solicitar Demonstração</button>
+        </form>
+    </div>
+
+    <!-- SUPORTE -->
+    <div class="suporte-box">
+        <h3><i class="fas fa-headset"></i> Precisa de Ajuda?</h3>
+        <p>Entre em contacto com nossa equipa de suporte técnico.</p>
+        <div style="margin-top: 1rem;">
+            <button class="btn-download" onclick="suporteWhatsApp()" style="background: #25D366;"><i class="fab fa-whatsapp"></i> WhatsApp Suporte</button>
+            <button class="btn-download" onclick="suporteEmail()" style="background: #2563eb; margin-left: 0.5rem;"><i class="fas fa-envelope"></i> E-mail Suporte</button>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>KanawaSoft - Sistema de Gestão ERP - MRP | Desenvolvido por D.PEDRO SOLUÇÕES</p>
+    <p>Tecnologia · Segurança · Serviços | © 2026 Todos os direitos reservados</p>
+</footer>
+
+<div id="modalConfirm" class="modal">
+    <div class="modal-content">
+        <i class="fas fa-check-circle" style="font-size: 3rem; color: #22c55e;"></i>
+        <h3 style="margin: 1rem 0;" id="modalTitle">Solicitação Enviada!</h3>
+        <p id="modalMessage"></p>
+        <button onclick="fecharModal()" style="margin-top: 1rem; background: #2563eb; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 2rem; cursor: pointer;">Fechar</button>
+    </div>
+</div>
+
+<script>
+    // Módulos do Sistema
+    const modules = [
+        { name: "DASHBOARD", icon: "fa-chart-pie", features: ["Widgets e Indicadores", "Gráficos", "Metas e Alertas", "Layout do Dashboard"] },
+        { name: "VENDAS", icon: "fa-cash-register", features: ["Parâmetros de Venda", "Orçamentos", "Pedidos", "Notas Fiscais", "Devoluções"] },
+        { name: "ESTOQUE", icon: "fa-boxes", features: ["Parâmetros de Estoque", "Movimentações", "Transferências", "Inventário", "Locais e Unidades"] },
+        { name: "MRP", icon: "fa-microchip", features: ["Parâmetros do MRP", "Necessidades de Materiais", "Ordens Sugeridas", "Lead Times", "Simulações"] },
+        { name: "PRODUÇÃO", icon: "fa-industry", features: ["Parâmetros de Produção", "Ordens de Produção", "Apontamentos", "Centros de Trabalho", "Roteiros"] },
+        { name: "COMPRAS", icon: "fa-shopping-cart", features: ["Parâmetros de Compras", "Cotação", "Pedidos de Compra", "Fornecedores", "Recebimentos"] },
+        { name: "FINANCEIRO", icon: "fa-coins", features: ["Contas a Pagar", "Contas a Receber", "Caixa/Bancos", "Fluxo de Caixa", "Conciliação"] },
+        { name: "CLIENTES", icon: "fa-users", features: ["Grupos de Clientes", "Limite de Crédito", "Condições de Pagamento", "Endereços", "Contatos"] },
+        { name: "FORNECEDORES", icon: "fa-truck", features: ["Grupos de Fornecedores", "Produtos por Fornecedor", "Avaliações", "Contatos"] },
+        { name: "RELATÓRIOS", icon: "fa-file-alt", features: ["Relatórios de Vendas", "Relatórios de Estoque", "Relatórios Financeiros", "Relatórios de Produção", "Personalizados"] },
+        { name: "CONFIGURAÇÕES GERAIS", icon: "fa-sliders-h", features: ["Parâmetros do Sistema", "Preferências", "Numerações", "Moedas e Idiomas", "Unidades de Medida"] },
+        { name: "USUÁRIOS", icon: "fa-user-lock", features: ["Usuários", "Perfis e Permissões", "Grupos de Acesso", "Políticas de Senha", "Acessos Recentes"] },
+        { name: "EMPRESA", icon: "fa-building", features: ["Dados da Empresa", "Filiais", "Parâmetros Fiscais", "Regimes Tributários", "Certificados"] },
+        { name: "IMPRESSÃO", icon: "fa-print", features: ["Impressoras", "Modelos de Impressão", "Danfe/NF-e", "Boletos", "Etiquetas"] },
+        { name: "INTEGRAÇÕES", icon: "fa-plug", features: ["Integrações Ativas", "API", "Webhooks", "ERP/E-commerce", "Sincronizações"] },
+        { name: "SEGURANÇA", icon: "fa-shield-alt", features: ["Firewall de IP", "Sessões Ativas", "Backup", "Certificado SSL"] },
+        { name: "LOGS / AUDITORIA", icon: "fa-history", features: ["Logs do Sistema", "Logs de Acesso", "Alterações de Dados", "Auditoria de Usuários", "Exportar Logs"] }
+    ];
+
+    const transversal = [
+        { name: "NOTIFICAÇÕES", desc: "E-mails, alertas e notificações do sistema" },
+        { name: "AUTOMAÇÕES", desc: "Regras de automação e fluxos de trabalho" },
+        { name: "BACKUP", desc: "Backup automático e restauração de dados" },
+        { name: "LICENÇA", desc: "Informações da licença e módulos liberados" },
+        { name: "ATUALIZAÇÕES", desc: "Versão do sistema e verificações" }
+    ];
+
+    function renderModules() {
+        const grid = document.getElementById('modulesGrid');
+        if(!grid) return;
+        grid.innerHTML = '';
+        modules.forEach(mod => {
+            const card = document.createElement('div');
+            card.className = 'module-card';
+            card.innerHTML = `
+                <div class="module-header">
+                    <div class="module-icon"><i class="fas ${mod.icon}"></i></div>
+                    <h3>${mod.name}</h3>
+                </div>
+                <ul class="module-features">
+                    ${mod.features.map(f => `<li><i class="fas fa-check-circle"></i> ${f}</li>`).join('')}
+                </ul>
+                <button class="btn-config" onclick="alert('Configurações de ${mod.name} - Entre em contacto para mais detalhes')">Configurar →</button>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function renderTransversal() {
+        const grid = document.getElementById('transversalGrid');
+        if(!grid) return;
+        grid.innerHTML = '';
+        transversal.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'transversal-item';
+            div.innerHTML = `
+                <span><strong>${item.name}</strong><br><small>${item.desc}</small></span>
+                <button class="btn-config" onclick="alert('Configurações de ${item.name} - Agende uma demonstração')">Configurar →</button>
+            `;
+            grid.appendChild(div);
+        });
+    }
+
+    function downloadSetup() {
+        window.open('https://dpedrosolucoes.shop/downloads/kanawasoft-setup.exe', '_blank');
+        mostrarModal('Download Iniciado', 'O download do setup do KanawaSoft Desktop foi iniciado.');
+    }
+    function downloadPortable() {
+        window.open('https://dpedrosolucoes.shop/downloads/kanawasoft-portable.zip', '_blank');
+        mostrarModal('Download Iniciado', 'A versão portable está sendo baixada.');
+    }
+    function downloadDatabase() {
+        window.open('https://dpedrosolucoes.shop/downloads/kanawasoft-db-scripts.zip', '_blank');
+        mostrarModal('Download Iniciado', 'Scripts do banco de dados baixados.');
+    }
+    function baixarUpdate() {
+        window.open('https://dpedrosolucoes.shop/downloads/kanawasoft-update-3.2.0.exe', '_blank');
+        mostrarModal('Atualização Disponível', 'O atualizador do KanawaSoft foi baixado.');
+    }
+    function verificarAtualizacao() {
+        mostrarModal('Verificação de Atualizações', 'Você está usando a versão 3.1.5. A versão 3.2.0 está disponível.');
+    }
+
+    function comprarLicenca(plano, valor) {
+        const nome = prompt('Digite seu nome completo:');
+        if(!nome) return;
+        const telefone = prompt('Digite seu telefone (WhatsApp):');
+        if(!telefone) return;
+        const email = prompt('Digite seu e-mail:');
+        const mensagem = `*💼 COMPRA DE LICENÇA - KANAWA SOFT*%0A%0A*Plano:* ${plano}%0A*Valor:* ${valor.toLocaleString('pt-AO')} Kz%0A*Nome:* ${nome}%0A*Telefone:* ${telefone}%0A*E-mail:* ${email || 'Não informado'}`;
+        window.open(`https://wa.me/244946299834?text=${mensagem}`, '_blank');
+        mostrarModal('Solicitação Enviada!', 'Entraremos em contacto em breve com os dados de pagamento.');
+    }
+
+    function suporteWhatsApp() { window.open('https://wa.me/244946299834?text=Olá! Preciso de suporte para o KanawaSoft.', '_blank'); }
+    function suporteEmail() { window.location.href = 'mailto:dpedroservice@gmail.com?subject=Suporte KanawaSoft'; }
+
+    function enviarSolicitacao() {
+        const nome = document.getElementById('demoNome')?.value.trim();
+        const telefone = document.getElementById('demoTelefone')?.value.trim();
+        if(!nome || !telefone) { alert('Preencha nome e telefone.'); return; }
+        const empresa = document.getElementById('demoEmpresa')?.value.trim() || '';
+        const email = document.getElementById('demoEmail')?.value.trim() || '';
+        const mensagem = document.getElementById('demoMensagem')?.value.trim() || '';
+        const texto = `*🎓 SOLICITAÇÃO DE DEMONSTRAÇÃO - KANAWA SOFT*%0A%0A*Nome:* ${nome}%0A*Empresa:* ${empresa || 'Não informado'}%0A*Telefone:* ${telefone}%0A*Email:* ${email || 'Não informado'}%0A*Mensagem:* ${mensagem || 'Gostaria de agendar uma demonstração.'}`;
+        window.open(`https://wa.me/244946299834?text=${texto}`, '_blank');
+        mostrarModal('Solicitação Enviada!', 'Entraremos em contacto em breve.');
+        document.getElementById('demoForm')?.reset();
+    }
+
+    function mostrarModal(titulo, mensagem) {
+        document.getElementById('modalTitle').innerText = titulo;
+        document.getElementById('modalMessage').innerHTML = mensagem;
+        document.getElementById('modalConfirm').classList.add('active');
+    }
+    function fecharModal() { document.getElementById('modalConfirm').classList.remove('active'); }
+
+    document.getElementById('submitDemoBtn')?.addEventListener('click', enviarSolicitacao);
+    document.getElementById('openDemoBtn')?.addEventListener('click', () => { document.getElementById('demo').scrollIntoView({ behavior: 'smooth' }); });
+    window.addEventListener('click', (e) => { if(e.target === document.getElementById('modalConfirm')) fecharModal(); });
+
+    renderModules();
+    renderTransversal();
+</script>
+</body>
+</html>

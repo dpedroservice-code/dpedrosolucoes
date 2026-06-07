@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Projetos | D.PEDRO SOLUÇÕES – Tecnologia, Segurança & Energia</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Portfólio de projetos realizados pela D.PEDRO SOLUÇÕES em Angola: CFTV, controlo de acesso, energia solar, redes e sistemas integrados. Cases de sucesso.">
+    <meta name="keywords" content="projetos Angola, instalações CFTV, energia solar instalada, redes empresariais, cases D.PEDRO">
+    <meta name="author" content="D.PEDRO SOLUÇÕES">
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://i.ibb.co/fVJjMXtL/logo1.png" type="image/x-icon">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/hFnw5Br7/logo.jpg">
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/lightgallery@2.7.1/css/lightgallery-bundle.min.css">
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #2563eb15, transparent 30%),
+                        radial-gradient(circle at bottom right, #fbbf2415, transparent 30%),
+                        #0f172a;
+            color: #e2e8f0;
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(37,99,235,0.3);
+            border-top-color: #fbbf24;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Cursor glow */
+        @media (min-width: 769px) {
+            .cursor-glow {
+                position: fixed;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: #2563eb;
+                pointer-events: none;
+                filter: blur(15px);
+                z-index: 9999;
+                transition: transform 0.1s ease;
+            }
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(251,191,36,0.3);
+        }
+        .top-bar .contact-info { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+        .top-bar .contact-info i { color: #fbbf24; }
+        .social-links a { color: #cbd5e1; margin-left: 1rem; transition: 0.2s; }
+        .social-links a:hover { color: #fbbf24; transform: translateY(-2px); }
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; text-align: center; gap: 0.5rem; }
+            .top-bar .contact-info { justify-content: center; }
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { display: flex; align-items: center; gap: 0.75rem; }
+        .logo img { height: 55px; transition: 0.3s; }
+        .logo-text { font-weight: 700; font-size: 1.2rem; color: white; line-height: 1.2; }
+        .logo-text small { display: block; font-size: 0.55rem; color: #94a3b8; }
+        .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+        .nav-links a, .nav-links button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-weight: 500;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .nav-links a:hover, .nav-links a.active { background: rgba(37,99,235,0.3); color: #fbbf24; }
+        .btn-app { background: linear-gradient(135deg, #22c55e, #16a34a) !important; color: white !important; }
+        .menu-toggle { display: none; cursor: pointer; font-size: 1.5rem; background: none; border: none; color: white; }
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(15,23,42,0.98);
+                backdrop-filter: blur(15px);
+                padding: 1.5rem;
+                gap: 0.8rem;
+                z-index: 99;
+                border-bottom: 1px solid rgba(251,191,36,0.3);
+            }
+            .nav-links.active { display: flex; }
+            .menu-toggle { display: block; }
+        }
+
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 5%; }
+
+        /* Page Header */
+        .page-header { text-align: center; margin: 2rem 0 1rem; }
+        .page-header h1 { font-size: 2.8rem; background: linear-gradient(135deg, #ffffff, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .page-header p { color: #94a3b8; max-width: 700px; margin: 0.5rem auto; }
+
+        /* Filters */
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            margin: 2rem 0 1.5rem;
+        }
+        .filter-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .filter-btn.active, .filter-btn:hover { background: #fbbf24; color: #0f172a; border-color: #fbbf24; }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .project-card {
+            background: rgba(15,23,42,0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 1.8rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+        }
+        .project-card:hover { transform: translateY(-8px); border-color: #fbbf24; box-shadow: 0 20px 35px -10px rgba(0,0,0,0.4); }
+        .project-image {
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .project-category {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            color: #fbbf24;
+        }
+        .project-content { padding: 1.5rem; }
+        .project-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .project-location { font-size: 0.8rem; color: #fbbf24; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.3rem; }
+        .project-desc { color: #94a3b8; font-size: 0.9rem; margin-bottom: 1rem; }
+        .project-stats { display: flex; gap: 1rem; margin-top: 0.5rem; }
+        .stat { font-size: 0.8rem; background: rgba(37,99,235,0.2); padding: 0.2rem 0.6rem; border-radius: 20px; }
+
+        /* Featured Case */
+        .featured-case {
+            background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(15,23,42,0.9));
+            border-radius: 2rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+            border: 1px solid rgba(251,191,36,0.3);
+        }
+        .featured-content { flex: 2; }
+        .featured-badge { background: #fbbf24; color: #0f172a; display: inline-block; padding: 0.2rem 1rem; border-radius: 40px; font-size: 0.7rem; margin-bottom: 0.5rem; }
+        .featured-content h2 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .featured-stats { display: flex; gap: 1.5rem; margin-top: 1rem; }
+
+        /* Stats Counter */
+        .stats-section {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+            background: rgba(15,23,42,0.5);
+            border-radius: 2rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: #fbbf24; }
+
+        .contact-block {
+            background: rgba(15,23,42,0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 2.5rem;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(251,191,36,0.3);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        footer {
+            background: rgba(5,15,40,0.95);
+            backdrop-filter: blur(10px);
+            color: #94a3b8;
+            padding: 3rem 5% 1.5rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(251,191,36,0.2);
+        }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; }
+        .footer-col a { color: #94a3b8; text-decoration: none; display: block; margin: 0.5rem 0; }
+        .footer-col a:hover { color: #fbbf24; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .whatsapp-float {
+            position: fixed; bottom: 30px; right: 30px; background: #25D366; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;
+            font-size: 2rem; z-index: 100; text-decoration: none; animation: bounce 2s infinite;
+        }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        .top-arrow {
+            position: fixed; bottom: 110px; right: 30px; background: #fbbf24; width: 50px; height: 50px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0f172a;
+            font-size: 1.5rem; cursor: pointer; z-index: 99;
+        }
+        @media (max-width:768px){
+            .whatsapp-float{width:50px;height:50px;font-size:1.5rem}
+            .top-arrow{width:40px;height:40px;bottom:90px}
+        }
+    </style>
+</head>
+<body>
+
+<div id="loader"><div class="loader-spinner"></div></div>
+<div class="cursor-glow"></div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="contact-info">
+        <span><i class="fas fa-phone-alt"></i> 946 299 834 | 959 777 301</span>
+        <span><i class="fas fa-map-marker-alt"></i> Luanda, Viana, Vila Flor</span>
+        <span><i class="fas fa-envelope"></i> dpedroservice@gmail.com</span>
+    </div>
+    <div class="social-links">
+        <a href="https://wa.me/244946299834" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="mailto:dpedroservice@gmail.com"><i class="fas fa-envelope"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook"></i></a>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav>
+    <div class="logo">
+        <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+            <img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="D.PEDRO SOLUÇÕES">
+            <div class="logo-text">D.PEDRO SOLUÇÕES <small>COMÉRCIO E PRESTAÇÃO DE SERVIÇOS</small></div>
+        </a>
+    </div>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <div class="nav-links" id="navLinks">
+        <a href="index.html">Início</a>
+        <a href="quem-somos.html">Quem somos</a>
+        <a href="mercados-verticais.html">Mercados Verticais</a>
+        <a href="solucoes.html">Soluções</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="recrutamento.html">Recrutamento</a>
+        <a href="contactos.html">Contactos</a>
+        <a href="curso.html">Curso</a>
+        <a href="projetos.html" class="active">Projetos</a>
+        <a href="gerenciamento.html">Gerenciamento</a>
+        <a href="donload.html" class="btn-app"><i class="fas fa-download"></i> App</a>
+    </div>
+</nav>
+
+<main class="container">
+    <div class="page-header">
+        <h1><i class="fas fa-chart-line"></i> Projetos Realizados</h1>
+        <p>Conheça alguns dos nossos cases de sucesso em Angola. Inovação, qualidade e confiança em cada instalação.</p>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters-bar" id="filtersBar">
+        <button class="filter-btn active" data-cat="todos">Todos</button>
+        <button class="filter-btn" data-cat="cftv">CFTV & Segurança</button>
+        <button class="filter-btn" data-cat="energia">Energia Solar</button>
+        <button class="filter-btn" data-cat="redes">Redes & TI</button>
+        <button class="filter-btn" data-cat="acesso">Controlo Acesso</button>
+    </div>
+
+    <!-- Projetos Grid -->
+    <div class="projects-grid" id="projectsGrid"></div>
+
+    <!-- Estatísticas de projetos -->
+    <div class="stats-section">
+        <div><div class="stat-number">+120</div><p>Projetos entregues</p></div>
+        <div><div class="stat-number">+500</div><p>Câmaras instaladas</p></div>
+        <div><div class="stat-number">+2MWp</div><p>Potência solar instalada</p></div>
+        <div><div class="stat-number">100%</div><p>Clientes satisfeitos</p></div>
+    </div>
+
+    <!-- Caso em destaque -->
+    <div class="featured-case">
+        <div class="featured-content">
+            <span class="featured-badge"><i class="fas fa-star"></i> Destaque</span>
+            <h2>Condomínio Kilamba - CFTV + Controlo Acesso</h2>
+            <p>Implementação de sistema completo de videovigilância com 48 câmaras IP 4K, central de monitoramento e controlo de acesso biométrico para 3 portarias. Redução de 70% em ocorrências de segurança.</p>
+            <div class="featured-stats">
+                <div><i class="fas fa-video"></i> 48 câmaras</div>
+                <div><i class="fas fa-fingerprint"></i> 12 leitores biométricos</div>
+                <div><i class="fas fa-cloud-upload-alt"></i> Monitoramento remoto</div>
+            </div>
+        </div>
+        <div style="flex:1; text-align:center;">
+            <i class="fas fa-building" style="font-size: 5rem; color: #fbbf24; opacity:0.7;"></i>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="contact-block">
+        <span class="contact-highlight"><i class="fas fa-clipboard-list"></i> Quer um projeto personalizado para a sua empresa?</span>
+        <button class="btn-primary" id="btnProjetoPersonalizado"><i class="fab fa-whatsapp"></i> Solicitar proposta</button>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col"><strong>D.PEDRO SOLUÇÕES</strong><p>Comércio e Prestação de Serviços, Lda.</p><p>Luanda, Angola - Vila Flor, Kilamba</p></div>
+        <div class="footer-col"><strong>Contactos</strong><p><i class="fas fa-phone"></i> +244 946 299 834</p><p><i class="fas fa-envelope"></i> dpedroservice@gmail.com</p></div>
+        <div class="footer-col"><strong>Horário</strong><p>Segunda - Sexta: 8h - 18h</p><p>Sábado: 8h - 13h</p><p>Suporte Técnico 24/7</p></div>
+        <div class="footer-col"><strong>Links</strong><a href="index.html">Início</a><a href="projetos.html">Projetos</a><a href="contactos.html">Contactos</a></div>
+    </div>
+    <div class="footer-bottom"><div>© 2026 D.PEDRO SOLUÇÕES – Todos os direitos reservados</div><div><i class="fas fa-heart" style="color:#fbbf24"></i> Inovação em cada projeto</div></div>
+</footer>
+
+<a href="https://wa.me/244946299834" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<div class="top-arrow" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></div>
+
+<script>
+    // Loader
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        }, 800);
+    });
+
+    // Cursor glow
+    if (window.innerWidth > 768) {
+        const glow = document.querySelector('.cursor-glow');
+        document.addEventListener('mousemove', (e) => glow.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`);
+    }
+
+    function toggleMenu() { document.getElementById('navLinks').classList.toggle('active'); }
+    document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) document.getElementById('navLinks').classList.remove('active');
+    }));
+
+    // Base de dados de projetos
+    const projetos = [
+        { 
+            nome: "Condomínio Kilamba - CFTV 4K", categoria: "cftv", local: "Luanda - Kilamba", descricao: "Instalação de 48 câmaras IP 4K, NVR de 64 canais, monitoramento remoto 24/7.", 
+            imagem: "https://i.ibb.co/yFxYKkjq/tecnico.png", stats: ["48 câmaras", "Armazenamento 30 dias", "APP mobile"] 
+        },
+        { 
+            nome: "Indústria Textil - Controlo Acesso", categoria: "acesso", local: "Viana - Zona Industrial", descricao: "Biometria facial e digital para 500 colaboradores, catracas e portas automáticas.", 
+            imagem: "https://i.ibb.co/fzstMFqM/biometrico.jpg", stats: ["500 usuários", "Relógio de ponto", "Software de gestão"] 
+        },
+        { 
+            nome: "Fazenda Agrícola - Energia Solar Off Grid", categoria: "energia", local: "Malanje", descricao: "Sistema solar 150kWp com baterias de lítio, bombagem de água e iluminação.", 
+            imagem: "https://i.ibb.co/pjRd83wc/energia.png", stats: ["150kWp", "Baterias 200kWh", "Bombagem solar"] 
+        },
+        { 
+            nome: "Shopping Avenida - Cerca Elétrica + Alarmes", categoria: "cftv", local: "Luanda - Centro", descricao: "Cerca elétrica perimetral, sensores de movimento e central de alarme integrada.", 
+            imagem: "https://i.ibb.co/FLP81SfP/cerca-eletrica.png", stats: ["600m de cerca", "Sensores PIR", "Central GSM"] 
+        },
+        { 
+            nome: "Empresa de Telecomunicações - Rede Fibra Óptica", categoria: "redes", local: "Talatona", descricao: "Infraestrutura de fibra óptica para 3 edifícios, switch core e Wi-Fi empresarial.", 
+            imagem: "https://i.ibb.co/FLs7FFRx/cftv.png", stats: ["10km fibra", "Switches gerenciáveis", "WiFi6"] 
+        },
+        { 
+            nome: "Condomínio Vila Flor - Videoporteiro IP", categoria: "acesso", local: "Kilamba - Vila Flor", descricao: "Sistema de videoporteiro IP para 32 unidades, abertura remota via APP.", 
+            imagem: "https://i.ibb.co/xSKRh3ft/video-porteiro.png", stats: ["32 apartamentos", "APP mobile", "Gravação de visitas"] 
+        },
+        { 
+            nome: "Posto de Combustível - CFTV e Alarmes", categoria: "cftv", local: "Via Expressa", descricao: "Câmaras PTZ para monitoramento de bombas, alarmes e cerca elétrica.", 
+            imagem: "https://i.ibb.co/TBFvYWPR/seguranca.jpg", stats: ["8 câmaras PTZ", "Deteção de intrusão", "Backup energia"] 
+        },
+        { 
+            nome: "Escola Técnica - Sala de Informática", categoria: "redes", local: "Viana", descricao: "Montagem de laboratório de informática com 40 computadores, servidor e rede estruturada.", 
+            imagem: "https://i.ibb.co/j9DSLVHR/nvr-32.jpg", stats: ["40 PCs", "Servidor NAS", "Cabeamento Cat6"] 
+        }
+    ];
+
+    let currentFilter = "todos";
+
+    function renderProjects() {
+        const grid = document.getElementById('projectsGrid');
+        if (!grid) return;
+        const filtered = currentFilter === "todos" ? projetos : projetos.filter(p => p.categoria === currentFilter);
+        grid.innerHTML = '';
+        filtered.forEach(proj => {
+            let catLabel = "";
+            if(proj.categoria === 'cftv') catLabel = "CFTV & Segurança";
+            else if(proj.categoria === 'energia') catLabel = "Energia Solar";
+            else if(proj.categoria === 'redes') catLabel = "Redes & TI";
+            else catLabel = "Controlo Acesso";
+            
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            card.onclick = () => {
+                Swal.fire({
+                    title: proj.nome,
+                    html: `<strong>Local:</strong> ${proj.local}<br><strong>Descrição:</strong> ${proj.descricao}<br><br><div style="display:flex; gap:0.5rem; justify-content:center;">${proj.stats.map(s => `<span style="background:#fbbf24; color:#0f172a; padding:0.2rem 0.6rem; border-radius:20px;">${s}</span>`).join('')}</div>`,
+                    icon: 'info',
+                    background: '#0f172a',
+                    color: 'white',
+                    confirmButtonColor: '#fbbf24',
+                    confirmButtonText: 'Solicitar projeto similar'
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        window.open(`https://wa.me/244946299834?text=Olá! Gostaria de um projeto similar a: *${proj.nome}* (${proj.local}). Podem enviar orçamento?`, '_blank');
+                    }
+                });
+            };
+            card.innerHTML = `
+                <div class="project-image" style="background-image: linear-gradient(0deg, rgba(15,23,42,0.7), rgba(0,0,0,0.3)), url('${proj.imagem}'); background-size: cover;">
+                    <div class="project-category">${catLabel}</div>
+                </div>
+                <div class="project-content">
+                    <div class="project-title">${proj.nome}</div>
+                    <div class="project-location"><i class="fas fa-map-marker-alt"></i> ${proj.local}</div>
+                    <div class="project-desc">${proj.descricao}</div>
+                    <div class="project-stats">${proj.stats.map(s => `<span class="stat">${s}</span>`).join('')}</div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // Filtros
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.getAttribute('data-cat');
+            renderProjects();
+        });
+    });
+
+    document.getElementById('btnProjetoPersonalizado')?.addEventListener('click', () => {
+        window.open('https://wa.me/244946299834?text=Olá! Gostaria de solicitar um projeto personalizado para minha empresa. Podem me ajudar?', '_blank');
+        toastr.info('Solicitação enviada! Em breve nossa equipa responderá.');
+    });
+
+    toastr.options = { closeButton: true, progressBar: true, positionClass: "toast-top-right", timeOut: "4000" };
+    renderProjects();
+
+    setTimeout(() => {
+        Swal.fire({
+            title: '🏆 Projetos de Sucesso',
+            text: 'Conheça alguns dos nossos principais projetos realizados em Angola. Clique em qualquer card para mais detalhes.',
+            icon: 'info',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24',
+            confirmButtonText: 'Explorar projetos'
+        });
+    }, 1500);
+
+    window.toggleMenu = toggleMenu;
+</script>
+</body>
+</html>

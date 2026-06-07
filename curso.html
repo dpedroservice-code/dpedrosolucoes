@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Cursos | Academia D.PEDRO SOLUÇÕES – Qualifica-te Hoje</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Academia D.PEDRO SOLUÇÕES: Cursos profissionalizantes em Informática, Segurança Eletrónica, Redes, Energia Solar, Marketing Digital e muito mais. Certificado incluído e aulas práticas.">
+    <meta name="keywords" content="cursos Luanda, formação profissional Angola, segurança eletrónica, informática, redes, energia solar, certificado">
+    <meta name="author" content="D.PEDRO SOLUÇÕES">
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://i.ibb.co/fVJjMXtL/logo1.png" type="image/x-icon">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/hFnw5Br7/logo.jpg">
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #2563eb15, transparent 30%),
+                        radial-gradient(circle at bottom right, #fbbf2415, transparent 30%),
+                        #0f172a;
+            color: #e2e8f0;
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(37,99,235,0.3);
+            border-top-color: #fbbf24;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Cursor glow */
+        @media (min-width: 769px) {
+            .cursor-glow {
+                position: fixed;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: #2563eb;
+                pointer-events: none;
+                filter: blur(15px);
+                z-index: 9999;
+                transition: transform 0.1s ease;
+            }
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(251,191,36,0.3);
+        }
+        .top-bar .contact-info { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+        .top-bar .contact-info i { color: #fbbf24; }
+        .social-links a { color: #cbd5e1; margin-left: 1rem; transition: 0.2s; }
+        .social-links a:hover { color: #fbbf24; transform: translateY(-2px); }
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; text-align: center; gap: 0.5rem; }
+            .top-bar .contact-info { justify-content: center; }
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { display: flex; align-items: center; gap: 0.75rem; }
+        .logo img { height: 55px; transition: 0.3s; }
+        .logo-text { font-weight: 700; font-size: 1.2rem; color: white; line-height: 1.2; }
+        .logo-text small { display: block; font-size: 0.55rem; color: #94a3b8; }
+        .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+        .nav-links a, .nav-links button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-weight: 500;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .nav-links a:hover, .nav-links a.active { background: rgba(37,99,235,0.3); color: #fbbf24; }
+        .btn-app { background: linear-gradient(135deg, #22c55e, #16a34a) !important; color: white !important; }
+        .menu-toggle { display: none; cursor: pointer; font-size: 1.5rem; background: none; border: none; color: white; }
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(15,23,42,0.98);
+                backdrop-filter: blur(15px);
+                padding: 1.5rem;
+                gap: 0.8rem;
+                z-index: 99;
+                border-bottom: 1px solid rgba(251,191,36,0.3);
+            }
+            .nav-links.active { display: flex; }
+            .menu-toggle { display: block; }
+        }
+
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 5%; }
+
+        /* Hero Academia */
+        .academy-hero {
+            background: linear-gradient(135deg, rgba(37,99,235,0.4), rgba(15,23,42,0.9));
+            border-radius: 2.5rem;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            border: 1px solid rgba(251,191,36,0.4);
+        }
+        .academy-hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .academy-hero .tagline { font-size: 1.2rem; color: #fbbf24; margin-bottom: 1rem; }
+        .badge-academy {
+            display: inline-flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .badge-academy span {
+            background: rgba(0,0,0,0.5);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            border-left: 2px solid #fbbf24;
+        }
+
+        /* Categorias de cursos */
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            margin: 2rem 0;
+        }
+        .cat-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+        .cat-btn.active, .cat-btn:hover {
+            background: #fbbf24;
+            color: #0f172a;
+            border-color: #fbbf24;
+        }
+
+        /* Tabela de cursos */
+        .courses-table-wrapper {
+            overflow-x: auto;
+            margin: 2rem 0;
+            background: rgba(15,23,42,0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 0.5rem;
+        }
+        .courses-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .courses-table th, .courses-table td {
+            padding: 1rem 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .courses-table th {
+            background: rgba(37,99,235,0.3);
+            color: #fbbf24;
+            font-weight: 600;
+        }
+        .courses-table tr:hover { background: rgba(255,255,255,0.05); }
+        .btn-inscricao {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Info cards */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .info-card {
+            background: rgba(15,23,42,0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            text-align: center;
+            border: 1px solid rgba(251,191,36,0.2);
+        }
+        .info-card i { font-size: 2rem; color: #fbbf24; margin-bottom: 0.5rem; }
+        .info-card h4 { margin-bottom: 0.3rem; }
+
+        /* Diferenciais */
+        .differentials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .diff-item {
+            background: rgba(37,99,235,0.15);
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        /* Contact CTA */
+        .contact-block {
+            background: rgba(15,23,42,0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 2.5rem;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(251,191,36,0.3);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        footer {
+            background: rgba(5,15,40,0.95);
+            backdrop-filter: blur(10px);
+            color: #94a3b8;
+            padding: 3rem 5% 1.5rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(251,191,36,0.2);
+        }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; }
+        .footer-col a { color: #94a3b8; text-decoration: none; display: block; margin: 0.5rem 0; }
+        .footer-col a:hover { color: #fbbf24; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .whatsapp-float {
+            position: fixed; bottom: 30px; right: 30px; background: #25D366; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;
+            font-size: 2rem; z-index: 100; text-decoration: none; animation: bounce 2s infinite;
+        }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        .top-arrow {
+            position: fixed; bottom: 110px; right: 30px; background: #fbbf24; width: 50px; height: 50px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0f172a;
+            font-size: 1.5rem; cursor: pointer; z-index: 99;
+        }
+        @media (max-width:768px){
+            .whatsapp-float{width:50px;height:50px;font-size:1.5rem}
+            .top-arrow{width:40px;height:40px;bottom:90px}
+        }
+    </style>
+</head>
+<body>
+
+<div id="loader"><div class="loader-spinner"></div></div>
+<div class="cursor-glow"></div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="contact-info">
+        <span><i class="fas fa-phone-alt"></i> 946 299 834 | 959 777 301</span>
+        <span><i class="fas fa-map-marker-alt"></i> Luanda, Kilamba, Vila Flor - Mucula Ngola</span>
+        <span><i class="fas fa-envelope"></i> dpedroservice@gmail.com</span>
+    </div>
+    <div class="social-links">
+        <a href="https://wa.me/244946299834" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="mailto:dpedroservice@gmail.com"><i class="fas fa-envelope"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook"></i></a>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav>
+    <div class="logo">
+        <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+            <img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="D.PEDRO SOLUÇÕES">
+            <div class="logo-text">D.PEDRO SOLUÇÕES <small>ACADEMIA & FORMAÇÃO</small></div>
+        </a>
+    </div>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <div class="nav-links" id="navLinks">
+        <a href="index.html">Início</a>
+        <a href="quem-somos.html">Quem somos</a>
+        <a href="mercados-verticais.html">Mercados Verticais</a>
+        <a href="solucoes.html">Soluções</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="recrutamento.html">Recrutamento</a>
+        <a href="contactos.html">Contactos</a>
+        <a href="curso.html" class="active">Curso</a>
+        <a href="projetos.html">Projetos</a>
+        <a href="gerenciamento.html">Gerenciamento</a>
+        <a href="donload.html" class="btn-app"><i class="fas fa-download"></i> App</a>
+    </div>
+</nav>
+
+<main class="container">
+    <!-- Hero -->
+    <div class="academy-hero">
+        <h1><i class="fas fa-graduation-cap"></i> Academia D.PEDRO SOLUÇÕES</h1>
+        <div class="tagline">QUALIFICA-TE HOJE, CONSTRÓI O TEU FUTURO!</div>
+        <p>Formação profissional com certificado incluído, aulas práticas e suporte ao empreendedorismo.</p>
+        <div class="badge-academy">
+            <span><i class="fas fa-laptop-code"></i> Tecnologia & Informática</span>
+            <span><i class="fas fa-shield-alt"></i> Segurança Eletrónica</span>
+            <span><i class="fas fa-tools"></i> Multi-Serviços</span>
+            <span><i class="fas fa-chalkboard-user"></i> Consultória em TI</span>
+        </div>
+    </div>
+
+    <!-- Filtros por categoria -->
+    <div class="categories" id="categoriesFilter">
+        <button class="cat-btn active" data-cat="todos">Todos os Cursos</button>
+        <button class="cat-btn" data-cat="informatica">Informática & TI</button>
+        <button class="cat-btn" data-cat="seguranca">Segurança Eletrónica</button>
+        <button class="cat-btn" data-cat="eletrica">Elétrica & Energia</button>
+        <button class="cat-btn" data-cat="telecom">Telecomunicações</button>
+        <button class="cat-btn" data-cat="gestao">Gestão & Marketing</button>
+        <button class="cat-btn" data-cat="multimedia">Multimédia & Design</button>
+    </div>
+
+    <!-- Tabela de Cursos -->
+    <div class="courses-table-wrapper">
+        <table class="courses-table" id="coursesTable">
+            <thead>
+                <tr><th>#</th><th>Curso</th><th>Duração</th><th>Preço (KZ)</th><th>Categoria</th><th>Ação</th></tr>
+            </thead>
+            <tbody id="coursesTableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- Informações de Inscrição e Documentos -->
+    <div class="info-cards">
+        <div class="info-card"><i class="fas fa-id-card"></i><h4>Documentos</h4><p>Cópia do BI / Cartão<br>2 Fotos tipo passe</p></div>
+        <div class="info-card"><i class="fas fa-edit"></i><h4>Inscrição</h4><p>3.000 Kz<br>Certificado incluído</p></div>
+        <div class="info-card"><i class="fas fa-chalkboard"></i><h4>Metodologia</h4><p>Aulas 100% práticas<br>Material de apoio 50%</p></div>
+        <div class="info-card"><i class="fas fa-clock"></i><h4>Horários</h4><p>Manhã: 08h-11h<br>Tarde: 13h-16h<br>Noite: 17h-20h</p></div>
+    </div>
+
+    <!-- Descontos Especiais e Diferenciais -->
+    <div class="differentials">
+        <div class="diff-item"><i class="fas fa-tags"></i> <strong>2 Cursos</strong> → 10% desconto</div>
+        <div class="diff-item"><i class="fas fa-tags"></i> <strong>3+ Cursos</strong> → 15% desconto</div>
+        <div class="diff-item"><i class="fas fa-certificate"></i> Certificado Reconhecido</div>
+        <div class="diff-item"><i class="fas fa-chalkboard-user"></i> Formadores Qualificados</div>
+        <div class="diff-item"><i class="fas fa-laptop"></i> Equipamentos Modernos</div>
+        <div class="diff-item"><i class="fas fa-briefcase"></i> Apoio ao Empreendedorismo</div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="contact-block">
+        <span class="contact-highlight"><i class="fas fa-graduation-cap"></i> Invista no seu futuro! Garanta sua vaga hoje.</span>
+        <button class="btn-primary" id="btnInscricaoGeral"><i class="fab fa-whatsapp"></i> Solicitar inscrição</button>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col"><strong>Academia D.PEDRO</strong><p>Formação profissionalizante<br>Luanda, Kilamba - Vila Flor, Mucula Ngola</p></div>
+        <div class="footer-col"><strong>Contactos</strong><p><i class="fas fa-phone"></i> 946 299 834 / 959 777 301</p><p><i class="fas fa-envelope"></i> dpedroservice@gmail.com</p></div>
+        <div class="footer-col"><strong>Horários</strong><p>Segunda - Sábado: 8h - 20h</p><p>Inscrições abertas todo o mês</p></div>
+        <div class="footer-col"><strong>Links</strong><a href="index.html">Início</a><a href="cursos.html">Cursos</a><a href="contactos.html">Contactos</a></div>
+    </div>
+    <div class="footer-bottom"><div>© 2026 D.PEDRO SOLUÇÕES – Academia | Tecnologia, Segurança & Formação</div><div><i class="fas fa-heart" style="color:#fbbf24"></i> APRENDA • PRATIQUE • CONQUISTE</div></div>
+</footer>
+
+<a href="https://wa.me/244946299834" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<div class="top-arrow" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></div>
+
+<script>
+    // Loader
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        }, 800);
+    });
+
+    // Cursor glow
+    if (window.innerWidth > 768) {
+        const glow = document.querySelector('.cursor-glow');
+        document.addEventListener('mousemove', (e) => glow.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`);
+    }
+
+    function toggleMenu() { document.getElementById('navLinks').classList.toggle('active'); }
+    document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) document.getElementById('navLinks').classList.remove('active');
+    }));
+
+    // Base de dados de cursos (30 cursos conforme imagem)
+    const cursos = [
+        { id:1, nome:"Informática Básica", duracao:"30 Dias", preco:18000, categoria:"informatica" },
+        { id:2, nome:"Informática Avançada", duracao:"45 Dias", preco:30000, categoria:"informatica" },
+        { id:3, nome:"Word, Excel e PowerPoint", duracao:"30 Dias", preco:22000, categoria:"informatica" },
+        { id:4, nome:"Digitação Profissional", duracao:"15 Dias", preco:10000, categoria:"informatica" },
+        { id:5, nome:"Montagem e Manutenção de Computadores", duracao:"45 Dias", preco:35000, categoria:"informatica" },
+        { id:6, nome:"Redes de Computadores", duracao:"45 Dias", preco:40000, categoria:"informatica" },
+        { id:7, nome:"Configuração de Roteadores e Wi-Fi", duracao:"15 Dias", preco:15000, categoria:"telecom" },
+        { id:8, nome:"Desenvolvimento de Sites", duracao:"60 Dias", preco:55000, categoria:"informatica" },
+        { id:9, nome:"Designer Gráfico", duracao:"45 Dias", preco:35000, categoria:"multimedia" },
+        { id:10, nome:"Instalação de CCTV", duracao:"30 Dias", preco:25000, categoria:"seguranca" },
+        { id:11, nome:"Configuração de Câmeras IP", duracao:"20 Dias", preco:20000, categoria:"seguranca" },
+        { id:12, nome:"Sistemas de Alarmes", duracao:"20 Dias", preco:20000, categoria:"seguranca" },
+        { id:13, nome:"Controle de Acesso", duracao:"20 Dias", preco:25000, categoria:"seguranca" },
+        { id:14, nome:"Cercas Elétricas", duracao:"15 Dias", preco:18000, categoria:"seguranca" },
+        { id:15, nome:"Eletricidade Básica", duracao:"45 Dias", preco:30000, categoria:"eletrica" },
+        { id:16, nome:"Instalação Elétrica Residencial", duracao:"45 Dias", preco:35000, categoria:"eletrica" },
+        { id:17, nome:"Energia Solar", duracao:"60 Dias", preco:55000, categoria:"eletrica" },
+        { id:18, nome:"Montagem de Painéis Elétricos", duracao:"30 Dias", preco:30000, categoria:"eletrica" },
+        { id:19, nome:"Montagem de Antena Parabólica", duracao:"15 Dias", preco:15000, categoria:"telecom" },
+        { id:20, nome:"Fibra Óptica", duracao:"30 Dias", preco:35000, categoria:"telecom" },
+        { id:21, nome:"Cabeamento Estruturado", duracao:"30 Dias", preco:30000, categoria:"telecom" },
+        { id:22, nome:"Sistemas PDV", duracao:"20 Dias", preco:18000, categoria:"gestao" },
+        { id:23, nome:"Gestão Comercial", duracao:"30 Dias", preco:25000, categoria:"gestao" },
+        { id:24, nome:"Marketing Digital", duracao:"30 Dias", preco:28000, categoria:"gestao" },
+        { id:25, nome:"Gestão de Redes Sociais", duracao:"30 Dias", preco:25000, categoria:"gestao" },
+        { id:26, nome:"Fotografia Profissional", duracao:"30 Dias", preco:30000, categoria:"multimedia" },
+        { id:27, nome:"Filmagem e Edição de Vídeo", duracao:"45 Dias", preco:40000, categoria:"multimedia" },
+        { id:28, nome:"Reparação de Telemóveis", duracao:"45 Dias", preco:45000, categoria:"telecom" },
+        { id:29, nome:"Impressão e Personalização", duracao:"30 Dias", preco:25000, categoria:"multimedia" },
+        { id:30, nome:"Higiene e Segurança no Trabalho", duracao:"15 Dias", preco:15000, categoria:"gestao" }
+    ];
+
+    let currentCategory = "todos";
+
+    function renderCursos() {
+        const tbody = document.getElementById('coursesTableBody');
+        if (!tbody) return;
+        const filtered = currentCategory === "todos" ? cursos : cursos.filter(c => c.categoria === currentCategory);
+        tbody.innerHTML = '';
+        filtered.forEach(curso => {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = curso.id;
+            row.insertCell(1).innerHTML = `<strong>${curso.nome}</strong>`;
+            row.insertCell(2).innerText = curso.duracao;
+            row.insertCell(3).innerHTML = `<span style="color:#fbbf24; font-weight:600;">${curso.preco.toLocaleString()} Kz</span>`;
+            row.insertCell(4).innerText = getCategoriaNome(curso.categoria);
+            row.insertCell(5).innerHTML = `<button class="btn-inscricao" onclick="inscreverCurso('${curso.nome.replace(/'/g, "\\'")}', ${curso.preco})"><i class="fab fa-whatsapp"></i> Inscrever</button>`;
+        });
+    }
+
+    function getCategoriaNome(cat) {
+        const map = {
+            informatica: "Informática & TI",
+            seguranca: "Segurança Eletrónica",
+            eletrica: "Elétrica & Energia",
+            telecom: "Telecomunicações",
+            gestao: "Gestão & Marketing",
+            multimedia: "Multimédia & Design"
+        };
+        return map[cat] || cat;
+    }
+
+    function inscreverCurso(nomeCurso, preco) {
+        const mensagem = `Olá! Tenho interesse no curso *${nomeCurso}* (Preço: ${preco.toLocaleString()} Kz + inscrição 3.000 Kz). Gostaria de saber mais sobre vagas, horários e formas de pagamento.`;
+        window.open(`https://wa.me/244946299834?text=${encodeURIComponent(mensagem)}`, '_blank');
+        toastr.success(`Solicitação de inscrição para ${nomeCurso} encaminhada!`);
+    }
+
+    // Filtros
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory = btn.getAttribute('data-cat');
+            renderCursos();
+        });
+    });
+
+    document.getElementById('btnInscricaoGeral')?.addEventListener('click', () => {
+        window.open('https://wa.me/244946299834?text=Olá! Gostaria de obter mais informações sobre os cursos da Academia D.PEDRO. Podem me ajudar com as inscrições?', '_blank');
+        toastr.info('Entre em contacto e garanta sua vaga!');
+    });
+
+    toastr.options = { closeButton: true, progressBar: true, positionClass: "toast-top-right", timeOut: "4000" };
+    renderCursos();
+
+    // SweetAlert promocional
+    setTimeout(() => {
+        Swal.fire({
+            title: '🎓 Invista no seu futuro!',
+            html: '<strong>Promoção especial:</strong><br>2 cursos → 10% desconto<br>3+ cursos → 15% desconto<br><br>Inscrição: 3.000 Kz | Certificado incluído',
+            icon: 'success',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24',
+            confirmButtonText: 'Quero me inscrever'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.open('https://wa.me/244946299834?text=Olá! Vi a promoção de cursos e quero garantir minha vaga.', '_blank');
+            }
+        });
+    }, 2000);
+
+    window.inscreverCurso = inscreverCurso;
+    window.toggleMenu = toggleMenu;
+</script>
+</body>
+</html>

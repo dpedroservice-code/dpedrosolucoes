@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Contactos | D.PEDRO SOLUÇÕES – Tecnologia, Segurança & Energia</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Entre em contacto com a D.PEDRO SOLUÇÕES. Solicite orçamentos, suporte técnico, dúvidas comerciais. Telefones, email, localização em Luanda, Angola.">
+    <meta name="keywords" content="Contactos D.PEDRO, telefone segurança Angola, email, localização Luanda, suporte técnico">
+    <meta name="author" content="D.PEDRO SOLUÇÕES">
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://i.ibb.co/fVJjMXtL/logo1.png" type="image/x-icon">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/hFnw5Br7/logo.jpg">
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #2563eb15, transparent 30%),
+                        radial-gradient(circle at bottom right, #fbbf2415, transparent 30%),
+                        #0f172a;
+            color: #e2e8f0;
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(37,99,235,0.3);
+            border-top-color: #fbbf24;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Cursor glow */
+        @media (min-width: 769px) {
+            .cursor-glow {
+                position: fixed;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: #2563eb;
+                pointer-events: none;
+                filter: blur(15px);
+                z-index: 9999;
+                transition: transform 0.1s ease;
+            }
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(251,191,36,0.3);
+        }
+        .top-bar .contact-info { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+        .top-bar .contact-info i { color: #fbbf24; }
+        .social-links a { color: #cbd5e1; margin-left: 1rem; transition: 0.2s; }
+        .social-links a:hover { color: #fbbf24; transform: translateY(-2px); }
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; text-align: center; gap: 0.5rem; }
+            .top-bar .contact-info { justify-content: center; }
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { display: flex; align-items: center; gap: 0.75rem; }
+        .logo img { height: 55px; transition: 0.3s; }
+        .logo-text { font-weight: 700; font-size: 1.2rem; color: white; line-height: 1.2; }
+        .logo-text small { display: block; font-size: 0.55rem; color: #94a3b8; }
+        .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+        .nav-links a, .nav-links button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-weight: 500;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .nav-links a:hover, .nav-links a.active { background: rgba(37,99,235,0.3); color: #fbbf24; }
+        .btn-app { background: linear-gradient(135deg, #22c55e, #16a34a) !important; color: white !important; }
+        .menu-toggle { display: none; cursor: pointer; font-size: 1.5rem; background: none; border: none; color: white; }
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(15,23,42,0.98);
+                backdrop-filter: blur(15px);
+                padding: 1.5rem;
+                gap: 0.8rem;
+                z-index: 99;
+                border-bottom: 1px solid rgba(251,191,36,0.3);
+            }
+            .nav-links.active { display: flex; }
+            .menu-toggle { display: block; }
+        }
+
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 5%; }
+
+        /* Page Header */
+        .page-header { text-align: center; margin: 2rem 0 1rem; }
+        .page-header h1 { font-size: 2.8rem; background: linear-gradient(135deg, #ffffff, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .page-header p { color: #94a3b8; max-width: 700px; margin: 0.5rem auto; }
+
+        /* Contact Cards */
+        .contact-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .contact-card {
+            background: rgba(15,23,42,0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+        }
+        .contact-card:hover { transform: translateY(-5px); border-color: #fbbf24; }
+        .contact-card i { font-size: 2.5rem; color: #fbbf24; margin-bottom: 1rem; }
+        .contact-card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .contact-card p { color: #94a3b8; }
+        .contact-card .btn-contact {
+            margin-top: 1rem;
+            display: inline-block;
+            background: rgba(37,99,235,0.3);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #fbbf24;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .contact-card .btn-contact:hover { background: #fbbf24; color: #0f172a; }
+
+        /* Formulário e Mapa */
+        .contact-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .contact-form-box {
+            background: rgba(15,23,42,0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 1.8rem;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .contact-form-box h3 { font-size: 1.5rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: white; }
+        .input-group { position: relative; }
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fbbf24;
+        }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 1rem;
+            color: white;
+        }
+        .input-group input:focus, .input-group textarea:focus { outline: none; border-color: #fbbf24; }
+        .btn-submit {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        .map-container {
+            background: rgba(15,23,42,0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 1.8rem;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        #map {
+            height: 350px;
+            width: 100%;
+        }
+        .map-info {
+            padding: 1rem;
+            text-align: center;
+            color: #94a3b8;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        @media (max-width: 768px) {
+            .contact-main { grid-template-columns: 1fr; }
+        }
+
+        /* Horário e Suporte */
+        .support-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .support-card {
+            background: rgba(37,99,235,0.1);
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-left: 3px solid #fbbf24;
+        }
+        .support-card i { font-size: 2rem; color: #fbbf24; }
+
+        /* Footer */
+        footer {
+            background: rgba(5,15,40,0.95);
+            backdrop-filter: blur(10px);
+            color: #94a3b8;
+            padding: 3rem 5% 1.5rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(251,191,36,0.2);
+        }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; }
+        .footer-col a { color: #94a3b8; text-decoration: none; display: block; margin: 0.5rem 0; }
+        .footer-col a:hover { color: #fbbf24; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .whatsapp-float {
+            position: fixed; bottom: 30px; right: 30px; background: #25D366; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;
+            font-size: 2rem; z-index: 100; text-decoration: none; animation: bounce 2s infinite;
+        }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        .top-arrow {
+            position: fixed; bottom: 110px; right: 30px; background: #fbbf24; width: 50px; height: 50px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0f172a;
+            font-size: 1.5rem; cursor: pointer; z-index: 99;
+        }
+        @media (max-width:768px){
+            .whatsapp-float{width:50px;height:50px;font-size:1.5rem}
+            .top-arrow{width:40px;height:40px;bottom:90px}
+        }
+    </style>
+</head>
+<body>
+
+<div id="loader"><div class="loader-spinner"></div></div>
+<div class="cursor-glow"></div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="contact-info">
+        <span><i class="fas fa-phone-alt"></i> 946 299 834 | 959 777 301</span>
+        <span><i class="fas fa-map-marker-alt"></i> Luanda, Viana, Vila Flor</span>
+        <span><i class="fas fa-envelope"></i> dpedroservice@gmail.com</span>
+    </div>
+    <div class="social-links">
+        <a href="https://wa.me/244946299834" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="mailto:dpedroservice@gmail.com"><i class="fas fa-envelope"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook"></i></a>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav>
+    <div class="logo">
+        <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+            <img src="https://i.ibb.co/FLs7FFRx/cftv.png" alt="D.PEDRO SOLUÇÕES">
+            <div class="logo-text">D.PEDRO SOLUÇÕES <small>COMÉRCIO E PRESTAÇÃO DE SERVIÇOS</small></div>
+        </a>
+    </div>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <div class="nav-links" id="navLinks">
+        <a href="index.html">Início</a>
+        <a href="quem-somos.html">Quem somos</a>
+        <a href="mercados-verticais.html">Mercados Verticais</a>
+        <a href="solucoes.html">Soluções</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="recrutamento.html">Recrutamento</a>
+        <a href="contactos.html" class="active">Contactos</a>
+        <a href="curso.html">Curso</a>
+        <a href="projetos.html">Projetos</a>
+        <a href="gerenciamento.html">Gerenciamento</a>
+        <a href="donload.html" class="btn-app"><i class="fas fa-download"></i> App</a>
+    </div>
+</nav>
+
+<main class="container">
+    <div class="page-header">
+        <h1><i class="fas fa-address-card"></i> Contactos</h1>
+        <p>Estamos prontos para atender você. Fale connosco através dos canais abaixo.</p>
+    </div>
+
+    <!-- Contact Cards -->
+    <div class="contact-cards">
+        <div class="contact-card">
+            <i class="fas fa-phone-alt"></i>
+            <h3>Telefone / WhatsApp</h3>
+            <p>+244 946 299 834</p>
+            <p>+244 959 777 301</p>
+            <a href="https://wa.me/244946299834" class="btn-contact" target="_blank"><i class="fab fa-whatsapp"></i> Chamar agora</a>
+        </div>
+        <div class="contact-card">
+            <i class="fas fa-envelope"></i>
+            <h3>E-mail</h3>
+            <p>dpedroservice@gmail.com</p>
+            <p>comercial@dpedrosolucoes.ao</p>
+            <a href="mailto:dpedroservice@gmail.com" class="btn-contact"><i class="fas fa-paper-plane"></i> Enviar e-mail</a>
+        </div>
+        <div class="contact-card">
+            <i class="fas fa-map-marker-alt"></i>
+            <h3>Localização</h3>
+            <p>Rua Direita da Engevia, Vila Flor</p>
+            <p>Kilamba, Luanda, Angola</p>
+            <a href="https://www.google.com/maps/place/DPEDRO+SOLU%C3%87%C3%95ES+LDA/@-9.0156795,13.3487928,16z" class="btn-contact" target="_blank"><i class="fas fa-directions"></i> Como chegar</a>
+        </div>
+    </div>
+
+    <!-- Formulário e Mapa -->
+    <div class="contact-main">
+        <div class="contact-form-box">
+            <h3><i class="fas fa-comment-dots"></i> Envie-nos uma mensagem</h3>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label>Nome completo *</label>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="nome" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Telefone *</label>
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="telefone" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Assunto *</label>
+                    <div class="input-group">
+                        <i class="fas fa-tag"></i>
+                        <input type="text" id="assunto" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Mensagem *</label>
+                    <div class="input-group">
+                        <i class="fas fa-comment"></i>
+                        <textarea id="mensagem" rows="4" required></textarea>
+                    </div>
+                </div>
+                <button type="button" class="btn-submit" onclick="enviarMensagem()"><i class="fab fa-whatsapp"></i> Enviar via WhatsApp</button>
+            </form>
+        </div>
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="map-info">
+                <p><i class="fas fa-building"></i> D.PEDRO SOLUÇÕES LDA | Rua Direita da Engevia, Vila Flor, Kilamba, Luanda</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Horário e Suporte -->
+    <div class="support-section">
+        <div class="support-card">
+            <i class="fas fa-clock"></i>
+            <div><strong>Horário de atendimento</strong><br>Segunda a Sexta: 8h - 18h<br>Sábado: 8h - 13h</div>
+        </div>
+        <div class="support-card">
+            <i class="fas fa-headset"></i>
+            <div><strong>Suporte Técnico 24/7</strong><br>Emergências: +244 946 299 834</div>
+        </div>
+        <div class="support-card">
+            <i class="fas fa-calendar-alt"></i>
+            <div><strong>Agendamento de visitas</strong><br>Orçamentos presenciais gratuitos</div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col"><strong>D.PEDRO SOLUÇÕES</strong><p>Comércio e Prestação de Serviços, Lda.</p><p>Luanda, Angola - Vila Flor, Kilamba</p></div>
+        <div class="footer-col"><strong>Contactos</strong><p><i class="fas fa-phone"></i> +244 946 299 834</p><p><i class="fas fa-envelope"></i> dpedroservice@gmail.com</p></div>
+        <div class="footer-col"><strong>Horário</strong><p>Segunda - Sexta: 8h - 18h</p><p>Sábado: 8h - 13h</p><p>Suporte Técnico 24/7</p></div>
+        <div class="footer-col"><strong>Links</strong><a href="index.html">Início</a><a href="quem-somos.html">Quem somos</a><a href="contactos.html">Contactos</a><a href="recrutamento.html">Recrutamento</a></div>
+    </div>
+    <div class="footer-bottom"><div>© 2026 D.PEDRO SOLUÇÕES – Todos os direitos reservados</div><div><i class="fas fa-heart" style="color:#fbbf24"></i> Tecnologia e Segurança</div></div>
+</footer>
+
+<a href="https://wa.me/244946299834" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<div class="top-arrow" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></div>
+
+<script>
+    // Loader
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        }, 800);
+    });
+
+    // Cursor glow
+    if (window.innerWidth > 768) {
+        const glow = document.querySelector('.cursor-glow');
+        document.addEventListener('mousemove', (e) => glow.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`);
+    }
+
+    function toggleMenu() { document.getElementById('navLinks').classList.toggle('active'); }
+    document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) document.getElementById('navLinks').classList.remove('active');
+    }));
+
+    // Mapa interativo (Leaflet)
+    function initMap() {
+        // Coordenadas aproximadas de Vila Flor, Kilamba, Luanda
+        const dpedroLocation = [-8.9833, 13.2833];
+        const map = L.map('map').setView(dpedroLocation, 15);
+        
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> & CartoDB',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+        
+        const customIcon = L.divIcon({
+            html: '<div style="background:#fbbf24; width:35px; height:35px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid white; box-shadow:0 0 15px #fbbf24;"><i class="fas fa-building" style="color:#0f172a; font-size:16px;"></i></div>',
+            iconSize: [35, 35],
+            popupAnchor: [0, -18]
+        });
+        
+        const marker = L.marker(dpedroLocation, { icon: customIcon }).addTo(map);
+        marker.bindPopup(`
+            <strong>D.PEDRO SOLUÇÕES LDA</strong><br>
+            Rua Direita da Engevia, Vila Flor<br>
+            Kilamba, Luanda, Angola<br>
+            📞 946 299 834 | 959 777 301
+        `).openPopup();
+        
+        L.circle(dpedroLocation, {
+            color: '#fbbf24',
+            fillColor: '#fbbf24',
+            fillOpacity: 0.1,
+            radius: 500
+        }).addTo(map);
+    }
+
+    // Enviar mensagem via WhatsApp (formulário de contacto)
+    function enviarMensagem() {
+        const nome = document.getElementById('nome').value.trim();
+        const telefone = document.getElementById('telefone').value.trim();
+        const assunto = document.getElementById('assunto').value.trim();
+        const mensagem = document.getElementById('mensagem').value.trim();
+        const email = document.getElementById('email').value.trim();
+        
+        if (!nome || !telefone || !assunto || !mensagem) {
+            toastr.error('Por favor, preencha todos os campos obrigatórios (*).');
+            return;
+        }
+        
+        const texto = `*CONTACTO - D.PEDRO SOLUÇÕES*%0A%0A*Nome:* ${nome}%0A*Telefone:* ${telefone}%0A*Email:* ${email || 'Não informado'}%0A*Assunto:* ${assunto}%0A*Mensagem:* ${mensagem}%0A%0A(Enviado via formulário de contactos)`;
+        window.open(`https://wa.me/244946299834?text=${texto}`, '_blank');
+        toastr.success('Mensagem enviada! Entraremos em contacto em breve.');
+        document.getElementById('contactForm').reset();
+    }
+
+    // Inicializar mapa
+    setTimeout(() => {
+        if (typeof L !== 'undefined') initMap();
+    }, 500);
+
+    toastr.options = { closeButton: true, progressBar: true, positionClass: "toast-top-right", timeOut: "4000" };
+    
+    // SweetAlert de boas-vindas
+    setTimeout(() => {
+        Swal.fire({
+            title: '📞 Fale connosco!',
+            text: 'Respondemos rapidamente via WhatsApp, e-mail ou telefone. Estamos aqui para ajudar.',
+            icon: 'info',
+            background: '#0f172a',
+            color: 'white',
+            confirmButtonColor: '#fbbf24',
+            confirmButtonText: 'Iniciar conversa'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.open('https://wa.me/244946299834', '_blank');
+            }
+        });
+    }, 2000);
+    
+    window.enviarMensagem = enviarMensagem;
+    window.toggleMenu = toggleMenu;
+</script>
+</body>
+</html>
