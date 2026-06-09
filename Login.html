@@ -42,7 +42,6 @@
             flex-direction: column;
         }
 
-        /* Loader */
         #loader {
             position: fixed;
             width: 100%;
@@ -65,7 +64,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Top Bar */
         .top-bar {
             background: rgba(15,23,42,0.95);
             backdrop-filter: blur(10px);
@@ -86,7 +84,6 @@
             .top-bar .contact-info { justify-content: center; }
         }
 
-        /* Navigation */
         nav {
             background: rgba(15,23,42,0.95);
             backdrop-filter: blur(10px);
@@ -101,7 +98,7 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         .logo { display: flex; align-items: center; gap: 0.75rem; }
-        .logo img { height: 55px; transition: 0.3s; }
+        .logo img { height: 55px; transition: 0.3s; border-radius: 12px; }
         .logo-text { font-weight: 700; font-size: 1.2rem; color: white; line-height: 1.2; }
         .logo-text small { display: block; font-size: 0.55rem; color: #94a3b8; }
         .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
@@ -139,7 +136,6 @@
             .menu-toggle { display: block; }
         }
 
-        /* Login Container */
         .login-container {
             flex: 1;
             display: flex;
@@ -285,6 +281,7 @@
             display: flex;
             gap: 1rem;
             justify-content: center;
+            flex-wrap: wrap;
         }
         .social-btn {
             background: rgba(255,255,255,0.08);
@@ -309,7 +306,6 @@
             font-size: 1.2rem;
         }
 
-        /* Footer */
         footer {
             background: rgba(5,15,40,0.95);
             backdrop-filter: blur(10px);
@@ -320,7 +316,6 @@
             border-top: 1px solid rgba(251,191,36,0.2);
         }
 
-        /* Modal Recuperação */
         .modal {
             display: none;
             position: fixed;
@@ -341,7 +336,7 @@
             background: rgba(15,23,42,0.98);
             backdrop-filter: blur(20px);
             width: 90%;
-            max-width: 450px;
+            max-width: 500px;
             border-radius: 2rem;
             padding: 2rem;
             border: 1px solid #fbbf24;
@@ -375,13 +370,34 @@
             opacity: 0.6;
             cursor: not-allowed;
         }
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #fbbf24);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1rem;
+        }
+        .profile-info {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .profile-info p {
+            margin: 0.5rem 0;
+            color: #cbd5e1;
+        }
+        .profile-info strong {
+            color: #fbbf24;
+        }
 
         @media (max-width: 480px) {
             .login-card { padding: 1.8rem; }
             .options-row { flex-direction: column; gap: 0.8rem; align-items: flex-start; }
         }
 
-        /* Cursor glow */
         @media (min-width: 769px) {
             .cursor-glow {
                 position: fixed;
@@ -401,7 +417,6 @@
 <div id="loader"><div class="loader-spinner"></div></div>
 <div class="cursor-glow"></div>
 
-<!-- Top Bar -->
 <div class="top-bar">
     <div class="contact-info">
         <span><i class="fas fa-phone-alt"></i> 946 299 834 | 959 777 301</span>
@@ -416,7 +431,6 @@
     </div>
 </div>
 
-<!-- Navigation -->
 <nav>
     <div class="logo">
         <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
@@ -441,7 +455,6 @@
     </div>
 </nav>
 
-<!-- Login Section -->
 <div class="login-container">
     <div class="login-card">
         <div class="login-header">
@@ -472,6 +485,7 @@
         
         <div class="social-login">
             <button class="social-btn" id="googleLoginBtn"><i class="fab fa-google"></i> Google</button>
+            <button class="social-btn" id="facebookLoginBtn"><i class="fab fa-facebook"></i> Facebook</button>
             <button class="social-btn" onclick="socialLogin('whatsapp')"><i class="fab fa-whatsapp"></i> WhatsApp</button>
         </div>
         
@@ -517,8 +531,12 @@
             <input type="tel" id="regTelefone" placeholder="Telefone (WhatsApp)">
         </div>
         <div class="input-group" style="margin-bottom: 1rem;">
+            <i class="fas fa-map-marker-alt"></i>
+            <input type="text" id="regEndereco" placeholder="Endereço">
+        </div>
+        <div class="input-group" style="margin-bottom: 1rem;">
             <i class="fas fa-lock"></i>
-            <input type="password" id="regPassword" placeholder="Palavra-passe">
+            <input type="password" id="regPassword" placeholder="Palavra-passe (mínimo 6 caracteres)">
         </div>
         <div class="input-group" style="margin-bottom: 1rem;">
             <i class="fas fa-lock"></i>
@@ -526,7 +544,30 @@
         </div>
         <button class="btn-submit" id="registerNewUserBtn"><i class="fas fa-user-plus"></i> Criar conta</button>
         <div class="divider"><span>ou</span></div>
-        <button class="social-btn" id="registerGoogleBtn" style="width:100%;"><i class="fab fa-google"></i> Registrar com Google</button>
+        <button class="social-btn" id="registerGoogleBtn" style="width:100%; margin-bottom:0.5rem;"><i class="fab fa-google"></i> Registrar com Google</button>
+        <button class="social-btn" id="registerFacebookBtn" style="width:100%;"><i class="fab fa-facebook"></i> Registrar com Facebook</button>
+    </div>
+</div>
+
+<!-- Modal Perfil do Usuário -->
+<div class="modal" id="profileModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-circle"></i> Meu Perfil</h3>
+            <button class="modal-close" onclick="fecharProfileModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="profile-avatar" id="profileAvatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-info">
+            <p><strong>Nome:</strong> <span id="profileNome">-</span></p>
+            <p><strong>E-mail:</strong> <span id="profileEmail">-</span></p>
+            <p><strong>Telefone:</strong> <span id="profileTelefone">-</span></p>
+            <p><strong>Endereço:</strong> <span id="profileEndereco">-</span></p>
+            <p><strong>Método de Login:</strong> <span id="profileMetodo">-</span></p>
+            <p><strong>UID:</strong> <span id="profileUid" style="font-size:0.7rem;">-</span></p>
+        </div>
+        <button class="btn-submit" id="logoutBtn" style="background:#dc2626; color:white;"><i class="fas fa-sign-out-alt"></i> Sair da conta</button>
     </div>
 </div>
 
@@ -535,12 +576,11 @@
 </footer>
 
 <script type="module">
-    // Import Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, setPersistence, browserLocalPersistence, browserSessionPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, setPersistence, browserLocalPersistence, browserSessionPersistence, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
-    // Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyBeyLbXM1B0V6029mS8vmkhp_tvf8Hlt48",
         authDomain: "dpedrosolucoes-9f155.firebaseapp.com",
@@ -551,13 +591,16 @@
         measurementId: "G-QYQ404QGTD"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const analytics = getAnalytics(app);
+    const db = getFirestore(app);
     const googleProvider = new GoogleAuthProvider();
+    const facebookProvider = new FacebookAuthProvider();
 
-    // DOM Elements
+    facebookProvider.addScope('email');
+    facebookProvider.addScope('public_profile');
+
     const emailInput = document.getElementById('emailLogin');
     const passwordInput = document.getElementById('passwordLogin');
     const rememberCheck = document.getElementById('rememberCheck');
@@ -566,12 +609,15 @@
     const registerBtn = document.getElementById('registerBtn');
     const recoveryModal = document.getElementById('recoveryModal');
     const registerModal = document.getElementById('registerModal');
+    const profileModal = document.getElementById('profileModal');
     const sendRecoveryBtn = document.getElementById('sendRecoveryBtn');
     const registerNewUserBtn = document.getElementById('registerNewUserBtn');
     const registerGoogleBtn = document.getElementById('registerGoogleBtn');
+    const registerFacebookBtn = document.getElementById('registerFacebookBtn');
     const googleLoginBtn = document.getElementById('googleLoginBtn');
+    const facebookLoginBtn = document.getElementById('facebookLoginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
 
-    // Loader
     window.addEventListener('load', () => {
         setTimeout(() => {
             const loader = document.getElementById('loader');
@@ -580,13 +626,11 @@
         }, 100);
     });
 
-    // Cursor glow
     if (window.innerWidth > 768) {
         const glow = document.querySelector('.cursor-glow');
         document.addEventListener('mousemove', (e) => glow.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`);
     }
 
-    // Toggle menu
     window.toggleMenu = function() { 
         document.getElementById('navLinks').classList.toggle('active'); 
     };
@@ -594,35 +638,54 @@
         if (window.innerWidth <= 900) document.getElementById('navLinks').classList.remove('active');
     }));
 
-    // Toastr options
     toastr.options = { closeButton: true, progressBar: true, positionClass: "toast-top-right", timeOut: "5000" };
 
-    // Check auto login
-    function checkAutoLogin() {
-        const remember = localStorage.getItem('rememberMe');
-        if (remember === 'true') {
-            const savedEmail = localStorage.getItem('savedEmail');
-            if (savedEmail) {
-                emailInput.value = savedEmail;
-                rememberCheck.checked = true;
-            }
+    async function salvarPerfilNoFirestore(user, dadosAdicionais = {}) {
+        const userRef = doc(db, 'usuarios', user.uid);
+        const userDoc = await getDoc(userRef);
+        
+        const perfilData = {
+            nome: user.displayName || dadosAdicionais.nome || '',
+            email: user.email,
+            telefone: dadosAdicionais.telefone || '',
+            endereco: dadosAdicionais.endereco || '',
+            metodoLogin: dadosAdicionais.metodoLogin || 'email/senha',
+            dataCriacao: user.metadata.creationTime,
+            ultimoLogin: user.metadata.lastSignInTime,
+            uid: user.uid
+        };
+        
+        if (!userDoc.exists()) {
+            await setDoc(userRef, perfilData);
+        } else {
+            await updateDoc(userRef, { ultimoLogin: user.metadata.lastSignInTime });
         }
         
-        // Monitor auth state
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // User is signed in
-                console.log('Usuário logado:', user.email);
-                localStorage.setItem('userLogged', 'true');
-                localStorage.setItem('userEmail', user.email);
-                localStorage.setItem('userName', user.displayName || user.email);
-                // Redirect to dashboard
-                window.location.href = 'gerenciamento.html';
-            }
-        });
+        localStorage.setItem('userProfile', JSON.stringify(perfilData));
+        return perfilData;
     }
 
-    // Login function
+    async function carregarPerfil(user) {
+        const userRef = doc(db, 'usuarios', user.uid);
+        const userDoc = await getDoc(userRef);
+        if (userDoc.exists()) {
+            const data = userDoc.data();
+            document.getElementById('profileNome').innerText = data.nome || user.displayName || user.email;
+            document.getElementById('profileEmail').innerText = user.email;
+            document.getElementById('profileTelefone').innerText = data.telefone || 'Não informado';
+            document.getElementById('profileEndereco').innerText = data.endereco || 'Não informado';
+            document.getElementById('profileMetodo').innerText = data.metodoLogin || 'email/senha';
+            document.getElementById('profileUid').innerText = user.uid;
+            
+            const avatar = document.getElementById('profileAvatar');
+            if (user.photoURL) {
+                avatar.innerHTML = `<img src="${user.photoURL}" style="width:80px; height:80px; border-radius:50%; object-fit:cover;">`;
+            } else {
+                avatar.innerHTML = `<i class="fas fa-user" style="font-size:3rem;"></i>`;
+            }
+        }
+    }
+
     async function realizarLogin() {
         const email = emailInput.value.trim();
         const password = passwordInput.value;
@@ -632,7 +695,6 @@
             return;
         }
 
-        // Set persistence
         const persistenceType = rememberCheck.checked ? browserLocalPersistence : browserSessionPersistence;
         await setPersistence(auth, persistenceType);
         
@@ -644,16 +706,14 @@
             localStorage.removeItem('savedEmail');
         }
 
-        // Show loading
         btnLogin.disabled = true;
         btnLogin.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
 
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            toastr.success('Login realizado com sucesso! Redirecionando...');
-            setTimeout(() => {
-                window.location.href = 'gerenciamento.html';
-            }, 1500);
+            await salvarPerfilNoFirestore(userCredential.user, { metodoLogin: 'email/senha' });
+            toastr.success('Login realizado com sucesso!');
+            await mostrarPerfilELogado(userCredential.user);
         } catch (error) {
             console.error('Erro de login:', error);
             let errorMessage = 'Erro ao fazer login.';
@@ -673,21 +733,13 @@
                     errorMessage = error.message;
             }
             toastr.error(errorMessage);
-            Swal.fire({
-                title: 'Acesso negado',
-                text: errorMessage,
-                icon: 'error',
-                background: '#0f172a',
-                color: 'white',
-                confirmButtonColor: '#fbbf24'
-            });
+            Swal.fire({ title: 'Acesso negado', text: errorMessage, icon: 'error', background: '#0f172a', color: 'white', confirmButtonColor: '#fbbf24' });
         } finally {
             btnLogin.disabled = false;
             btnLogin.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
         }
     }
 
-    // Password recovery
     async function enviarRecuperacao() {
         const email = document.getElementById('recoveryEmail').value.trim();
         if (!email) {
@@ -702,20 +754,10 @@
             await sendPasswordResetEmail(auth, email);
             toastr.success(`Link de recuperação enviado para ${email}`);
             fecharRecoveryModal();
-            Swal.fire({
-                title: 'Verifique seu e-mail',
-                text: 'Enviamos instruções para redefinir sua palavra-passe.',
-                icon: 'success',
-                background: '#0f172a',
-                color: 'white',
-                confirmButtonColor: '#fbbf24'
-            });
+            Swal.fire({ title: 'Verifique seu e-mail', text: 'Enviamos instruções para redefinir sua palavra-passe.', icon: 'success', background: '#0f172a', color: 'white', confirmButtonColor: '#fbbf24' });
         } catch (error) {
-            console.error('Erro ao enviar recuperação:', error);
             let errorMessage = 'Erro ao enviar e-mail de recuperação.';
-            if (error.code === 'auth/user-not-found') {
-                errorMessage = 'Nenhuma conta encontrada com este e-mail.';
-            }
+            if (error.code === 'auth/user-not-found') errorMessage = 'Nenhuma conta encontrada com este e-mail.';
             toastr.error(errorMessage);
         } finally {
             sendRecoveryBtn.disabled = false;
@@ -723,16 +765,16 @@
         }
     }
 
-    // Register new user with email/password
     async function registrarCliente() {
         const nome = document.getElementById('regNome').value.trim();
         const email = document.getElementById('regEmail').value.trim();
         const telefone = document.getElementById('regTelefone').value.trim();
+        const endereco = document.getElementById('regEndereco').value.trim();
         const senha = document.getElementById('regPassword').value;
         const confirmSenha = document.getElementById('regConfirmPassword').value;
 
-        if (!nome || !email || !telefone || !senha || !confirmSenha) {
-            toastr.error('Preencha todos os campos');
+        if (!nome || !email || !senha || !confirmSenha) {
+            toastr.error('Preencha todos os campos obrigatórios');
             return;
         }
 
@@ -751,82 +793,67 @@
 
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
-            // User created successfully
-            toastr.success('Conta criada com sucesso! Faça login.');
+            await updateProfile(userCredential.user, { displayName: nome });
+            await salvarPerfilNoFirestore(userCredential.user, { nome, telefone, endereco, metodoLogin: 'email/senha' });
+            
+            toastr.success('Conta criada com sucesso!');
             fecharRegisterModal();
             
-            // Send welcome message to WhatsApp
-            const msg = `*NOVO REGISTRO - D.PEDRO CLIENTE*%0A%0A*Nome:* ${nome}%0A*E-mail:* ${email}%0A*Telefone:* ${telefone}%0A*UID:* ${userCredential.user.uid}%0A%0A(Registrado via Firebase)`;
+            const msg = `*NOVO REGISTRO - D.PEDRO CLIENTE*%0A%0A*Nome:* ${nome}%0A*E-mail:* ${email}%0A*Telefone:* ${telefone || 'Não informado'}%0A*Endereço:* ${endereco || 'Não informado'}%0A*UID:* ${userCredential.user.uid}`;
             window.open(`https://wa.me/244946299834?text=${encodeURIComponent(msg)}`, '_blank');
             
-            Swal.fire({
-                title: 'Conta criada!',
-                text: 'Sua conta foi criada com sucesso. Agora você pode fazer login.',
-                icon: 'success',
-                background: '#0f172a',
-                color: 'white',
-                confirmButtonColor: '#fbbf24'
-            });
-            
-            // Pre-fill login form
-            emailInput.value = email;
-            passwordInput.value = '';
-            
+            Swal.fire({ title: 'Conta criada!', text: 'Sua conta foi criada com sucesso.', icon: 'success', background: '#0f172a', color: 'white', confirmButtonColor: '#fbbf24' });
+            await mostrarPerfilELogado(userCredential.user);
         } catch (error) {
-            console.error('Erro ao registrar:', error);
             let errorMessage = 'Erro ao criar conta.';
             switch (error.code) {
-                case 'auth/email-already-in-use':
-                    errorMessage = 'Este e-mail já está cadastrado.';
-                    break;
-                case 'auth/invalid-email':
-                    errorMessage = 'E-mail inválido.';
-                    break;
-                case 'auth/weak-password':
-                    errorMessage = 'A palavra-passe é muito fraca. Use pelo menos 6 caracteres.';
-                    break;
-                default:
-                    errorMessage = error.message;
+                case 'auth/email-already-in-use': errorMessage = 'Este e-mail já está cadastrado.'; break;
+                case 'auth/invalid-email': errorMessage = 'E-mail inválido.'; break;
+                case 'auth/weak-password': errorMessage = 'A palavra-passe é muito fraca. Use pelo menos 6 caracteres.'; break;
+                default: errorMessage = error.message;
             }
             toastr.error(errorMessage);
-            Swal.fire({
-                title: 'Erro no registro',
-                text: errorMessage,
-                icon: 'error',
-                background: '#0f172a',
-                color: 'white',
-                confirmButtonColor: '#fbbf24'
-            });
+            Swal.fire({ title: 'Erro no registro', text: errorMessage, icon: 'error', background: '#0f172a', color: 'white', confirmButtonColor: '#fbbf24' });
         } finally {
             registerNewUserBtn.disabled = false;
             registerNewUserBtn.innerHTML = '<i class="fas fa-user-plus"></i> Criar conta';
         }
     }
 
-    // Google Sign In
-    async function googleSignIn() {
+    async function loginComProvider(provider, metodo) {
         try {
-            const result = await signInWithPopup(auth, googleProvider);
+            const result = await signInWithPopup(auth, provider);
+            await salvarPerfilNoFirestore(result.user, { 
+                nome: result.user.displayName, 
+                telefone: result.user.phoneNumber || '',
+                metodoLogin: metodo 
+            });
             toastr.success(`Bem-vindo, ${result.user.displayName || result.user.email}!`);
-            setTimeout(() => {
-                window.location.href = 'gerenciamento.html';
-            }, 1500);
+            await mostrarPerfilELogado(result.user);
         } catch (error) {
-            console.error('Erro no Google SignIn:', error);
-            let errorMessage = 'Erro ao fazer login com Google.';
-            if (error.code === 'auth/popup-blocked') {
-                errorMessage = 'Pop-up bloqueado. Permita pop-ups para este site.';
-            }
+            console.error(`Erro no ${metodo}:`, error);
+            let errorMessage = `Erro ao fazer login com ${metodo}.`;
+            if (error.code === 'auth/popup-blocked') errorMessage = 'Pop-up bloqueado. Permita pop-ups para este site.';
             toastr.error(errorMessage);
         }
     }
 
-    // Google Sign In for registration
-    async function googleSignUp() {
-        await googleSignIn();
+    async function mostrarPerfilELogado(user) {
+        await carregarPerfil(user);
+        profileModal.classList.add('active');
     }
 
-    // Modal functions
+    async function fazerLogout() {
+        await auth.signOut();
+        localStorage.removeItem('rememberMe');
+        localStorage.removeItem('savedEmail');
+        localStorage.removeItem('userProfile');
+        toastr.success('Logout realizado com sucesso!');
+        profileModal.classList.remove('active');
+        emailInput.value = '';
+        passwordInput.value = '';
+    }
+
     function abrirRecoveryModal() {
         document.getElementById('recoveryModal').classList.add('active');
         document.getElementById('recoveryEmail').value = '';
@@ -839,61 +866,63 @@
         document.getElementById('regNome').value = '';
         document.getElementById('regEmail').value = '';
         document.getElementById('regTelefone').value = '';
+        document.getElementById('regEndereco').value = '';
         document.getElementById('regPassword').value = '';
         document.getElementById('regConfirmPassword').value = '';
     }
     window.fecharRegisterModal = function() {
         document.getElementById('registerModal').classList.remove('active');
     };
+    window.fecharProfileModal = function() {
+        document.getElementById('profileModal').classList.remove('active');
+    };
     window.socialLogin = function(provider) {
         if (provider === 'whatsapp') {
-            Swal.fire({
-                title: 'WhatsApp Login',
-                text: 'Para suporte ou registro via WhatsApp, entre em contato conosco.',
-                icon: 'info',
-                background: '#0f172a',
-                color: 'white',
-                confirmButtonColor: '#fbbf24'
-            }).then(() => {
-                window.open('https://wa.me/244946299834', '_blank');
-            });
+            Swal.fire({ title: 'WhatsApp Login', text: 'Para suporte ou registro via WhatsApp, entre em contato conosco.', icon: 'info', background: '#0f172a', color: 'white', confirmButtonColor: '#fbbf24' })
+                .then(() => window.open('https://wa.me/244946299834', '_blank'));
         }
     };
 
-    // Event listeners
     btnLogin.addEventListener('click', realizarLogin);
-    forgotBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        abrirRecoveryModal();
-    });
-    registerBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        abrirRegisterModal();
-    });
+    forgotBtn.addEventListener('click', (e) => { e.preventDefault(); abrirRecoveryModal(); });
+    registerBtn.addEventListener('click', (e) => { e.preventDefault(); abrirRegisterModal(); });
     sendRecoveryBtn.addEventListener('click', enviarRecuperacao);
     registerNewUserBtn.addEventListener('click', registrarCliente);
-    registerGoogleBtn.addEventListener('click', googleSignUp);
-    googleLoginBtn.addEventListener('click', googleSignIn);
+    registerGoogleBtn.addEventListener('click', () => loginComProvider(googleProvider, 'Google'));
+    registerFacebookBtn.addEventListener('click', () => loginComProvider(facebookProvider, 'Facebook'));
+    googleLoginBtn.addEventListener('click', () => loginComProvider(googleProvider, 'Google'));
+    facebookLoginBtn.addEventListener('click', () => loginComProvider(facebookProvider, 'Facebook'));
+    logoutBtn.addEventListener('click', fazerLogout);
 
-    // Enter key support
-    passwordInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') realizarLogin();
-    });
-    emailInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') realizarLogin();
-    });
+    passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') realizarLogin(); });
+    emailInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') realizarLogin(); });
 
-    // Check if user is already logged in
+    function checkAutoLogin() {
+        const remember = localStorage.getItem('rememberMe');
+        if (remember === 'true') {
+            const savedEmail = localStorage.getItem('savedEmail');
+            if (savedEmail) {
+                emailInput.value = savedEmail;
+                rememberCheck.checked = true;
+            }
+        }
+        
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                console.log('Usuário logado:', user.email);
+                localStorage.setItem('userLogged', 'true');
+                localStorage.setItem('userEmail', user.email);
+                await carregarPerfil(user);
+            }
+        });
+    }
+
     checkAutoLogin();
 
-    // Close modals when clicking outside
     window.onclick = function(event) {
-        if (event.target === recoveryModal) {
-            fecharRecoveryModal();
-        }
-        if (event.target === registerModal) {
-            fecharRegisterModal();
-        }
+        if (event.target === recoveryModal) fecharRecoveryModal();
+        if (event.target === registerModal) fecharRegisterModal();
+        if (event.target === profileModal) fecharProfileModal();
     };
 </script>
 </body>
