@@ -603,7 +603,7 @@
         <div>
             <h1>Kanawa<span>Soft</span></h1>
             <p style="font-size: 1.2rem; margin: 0.5rem 0;">Sistema de Gestão Completo ERP - MRP para Windows</p>
-            <div class="hero-badge"><i class="fas fa-tag"></i> Versão atual: 3.2.0</div>
+            <div class="hero-badge"><i class="fas fa-tag"></i> Versão atual: 17.0.0</div>
             <div class="version-badge"><i class="fas fa-calendar"></i> Última atualização: Junho 2026</div>
             <button class="btn-demo" id="openDemoBtn"><i class="fas fa-calendar-alt"></i> Solicitar Demonstração Grátis</button>
         </div>
@@ -722,7 +722,7 @@
         <h2><i class="fas fa-sync-alt"></i> Atualizações do Sistema</h2>
         <p>Mantenha seu KanawaSoft sempre atualizado com as últimas melhorias.</p>
         <ul class="update-list">
-            <li><i class="fas fa-check-circle"></i> <strong>Versão 3.2.0</strong> - Novo módulo de MRP, melhorias no PDV e correções de bugs (15/06/2026)</li>
+            <li><i class="fas fa-check-circle"></i> <strong>Versão 17.0.0</strong> - Novo módulo de MRP, melhorias no PDV e correções de bugs (15/06/2026)</li>
             <li><i class="fas fa-check-circle"></i> <strong>Versão 3.1.5</strong> - Integração com API de Notas Fiscais, relatórios personalizados (10/05/2026)</li>
             <li><i class="fas fa-check-circle"></i> <strong>Versão 3.1.0</strong> - Lançamento do módulo Financeiro completo (01/04/2026)</li>
             <li><i class="fas fa-check-circle"></i> <strong>Versão 3.0.2</strong> - Melhorias de performance e segurança (15/02/2026)</li>
@@ -876,24 +876,34 @@
         });
     }
 
+    // =============================================
+    // DOWNLOAD DO SETUP - LINK MEDIAFIRE ATUALIZADO
+    // =============================================
     function downloadSetup() {
-        window.open('https://dpedrosolucoes.shop/downloads/kanawasoft-setup.exe', '_blank');
-        mostrarModal('Download Iniciado', 'O download do setup do KanawaSoft Desktop foi iniciado.');
+        window.open('https://www.mediafire.com/file/o1s1x2cc4fb1144/Kanawa-Soft-ERP-Setup-17.0.0.exe/file', '_blank');
+        mostrarModal('Download Iniciado', 'O download do setup do KanawaSoft ERP 17.0.0 foi iniciado. Verifique a pasta de downloads do seu navegador.');
     }
+
     function downloadPortable() {
         window.open('https://dpedrosolucoes.shop/downloads/kanawasoft-portable.zip', '_blank');
         mostrarModal('Download Iniciado', 'A versão portable está sendo baixada.');
     }
+
     function downloadDatabase() {
         window.open('https://dpedrosolucoes.shop/downloads/kanawasoft-db-scripts.zip', '_blank');
         mostrarModal('Download Iniciado', 'Scripts do banco de dados baixados.');
     }
+
+    // =============================================
+    // BAIXAR ÚLTIMA VERSÃO - MESMO LINK DO MEDIAFIRE
+    // =============================================
     function baixarUpdate() {
-        window.open('https://dpedrosolucoes.shop/downloads/kanawasoft-update-3.2.0.exe', '_blank');
-        mostrarModal('Atualização Disponível', 'O atualizador do KanawaSoft foi baixado.');
+        window.open('https://www.mediafire.com/file/o1s1x2cc4fb1144/Kanawa-Soft-ERP-Setup-17.0.0.exe/file', '_blank');
+        mostrarModal('Download Iniciado', 'O instalador do KanawaSoft ERP 17.0.0 foi baixado. Siga as instruções para instalar.');
     }
+
     function verificarAtualizacao() {
-        mostrarModal('Verificação de Atualizações', 'Você está usando a versão 3.1.5. A versão 3.2.0 está disponível.');
+        mostrarModal('Verificação de Atualizações', 'Você está usando a versão 17.0.0. Esta é a versão mais recente disponível! ✅');
     }
 
     function comprarLicenca(plano, valor) {
